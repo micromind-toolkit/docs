@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>micromind package &mdash; micromind 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="micromind.networks package" href="micromind.networks.html" />
+    <link rel="prev" title="micromind" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            micromind
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">micromind</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">micromind package</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-micromind.core">micromind.core module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#micromind.core.Metric"><code class="docutils literal notranslate"><span class="pre">Metric</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#micromind.core.MicroMind"><code class="docutils literal notranslate"><span class="pre">MicroMind</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#micromind.core.Stage"><code class="docutils literal notranslate"><span class="pre">Stage</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#module-micromind.convert">micromind.convert module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#micromind.convert.convert_to_onnx"><code class="docutils literal notranslate"><span class="pre">convert_to_onnx()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#micromind.convert.convert_to_openvino"><code class="docutils literal notranslate"><span class="pre">convert_to_openvino()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#micromind.convert.convert_to_tflite"><code class="docutils literal notranslate"><span class="pre">convert_to_tflite()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#subpackages">Subpackages</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="micromind.networks.html">micromind.networks package</a></li>
+<li class="toctree-l4"><a class="reference internal" href="micromind.utils.html">micromind.utils package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How To Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Guide for Contributing to micromind</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">micromind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">micromind</a></li>
+      <li class="breadcrumb-item active">micromind package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/micromind.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="micromind-package">
+<h1>micromind package<a class="headerlink" href="#micromind-package" title="Link to this heading"></a></h1>
+<section id="module-micromind.core">
+<span id="micromind-core-module"></span><h2>micromind.core module<a class="headerlink" href="#module-micromind.core" title="Link to this heading"></a></h2>
+<p>Core class for micromind. Supports helper function for exports. Out-of-the-box
+multi-gpu and FP16 training with HF Accelerate and much more.</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Francesco Paissan, 2023</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.core.Metric">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.core.</span></span><span class="sig-name descname"><span class="pre">Metric</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reduction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mean'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#Metric"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.Metric" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class for tracking evaluation metrics during training.</p>
+<p>This class allows you to create custom evaluation metrics by providing a
+function to compute the metric and specifying a reduction method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – The name of the metric.</p></li>
+<li><p><strong>fn</strong> (<em>Callable</em>) – A function that computes the metric given predictions and batch data.</p></li>
+<li><p><strong>reduction</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The reduction method for the metric (‘sum’ or ‘mean’). Default is ‘mean’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>Reduced metric. Optionally, you can access the metric history</em></p></li>
+<li><p><strong>before call reduce(clear=True)</strong> (<em>torch.Tensor</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">micromind</span> <span class="kn">import</span> <span class="n">Metric</span><span class="p">,</span> <span class="n">Stage</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">custom_metric</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="c1"># Replace this with your custom metric calculation</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">pred</span> <span class="o">-</span> <span class="n">batch</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span> <span class="o">=</span> <span class="n">Metric</span><span class="p">(</span><span class="s2">&quot;Custom Metric&quot;</span><span class="p">,</span> <span class="n">custom_metric</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pred</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">batch</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">stage</span><span class="o">=</span><span class="n">Stage</span><span class="o">.</span><span class="n">train</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="o">.</span><span class="n">history</span>
+<span class="go">{0: [tensor([0.5000, 0.5000, 0.5000])], 1: [], 2: []}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">metric</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">Stage</span><span class="o">.</span><span class="n">train</span><span class="p">)</span>
+<span class="go">0.5</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.Metric.reduce">
+<span class="sig-name descname"><span class="pre">reduce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stage</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clear</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#Metric.reduce"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.Metric.reduce" title="Link to this definition"></a></dt>
+<dd><p>Compute and return the metric for a given prediction and batch data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pred</strong> (<em>torch.Tensor</em>) – The model’s prediction.</p></li>
+<li><p><strong>batch</strong> (<em>torch.Tensor</em>) – The ground truth or target values.</p></li>
+<li><p><strong>stage</strong> (<a class="reference internal" href="#micromind.core.Stage" title="micromind.core.Stage"><em>Stage</em></a>) – The current stage (e.g., Stage.train).</p></li>
+<li><p><strong>Optional</strong><strong>[</strong><strong>str</strong><strong>]</strong> (<em>device</em>) – The device on which to perform the computation. Default is ‘cpu’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.core.MicroMind">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.core.</span></span><span class="sig-name descname"><span class="pre">MicroMind</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hparams</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#MicroMind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>MicroMind is an abstract base class for creating and training deep learning
+models. Handles training on multi-gpu via accelerate (using DDP and other
+distributed training strategies). It automatically handles the device
+management for the training and the micromind’s export capabilities to onnx,
+OpenVino and TFLite.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hparams</strong> (<em>Optional</em><em>[</em><em>Namespace</em><em>]</em>) – Hyperparameters for the model. Default is None.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.compute_loss">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compute_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.compute_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.compute_loss" title="Link to this definition"></a></dt>
+<dd><p>Computes the cost function for the optimization process.  It return a
+tensor on which backward() is called. This method should be overwritten
+for the specific application.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pred</strong> (<em>Union</em><em>[</em><em>torch.Tensor</em><em>, </em><em>Tuple</em><em>]</em>) – Output of the forward() function</p></li>
+<li><p><strong>batch</strong> (<em>torch.Tensor</em>) – Batch as defined from the DataLoader.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>loss</strong> – Compute cost function.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.configure_optimizers">
+<span class="sig-name descname"><span class="pre">configure_optimizers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.configure_optimizers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.configure_optimizers" title="Link to this definition"></a></dt>
+<dd><p>Configures and defines the optimizer for the task. Defaults to adam
+with lr=0.001; It can be overwritten by either passing arguments from the
+command line, or by overwriting this entire method.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><ul class="simple">
+<li><p><em>Optimizer and learning rate scheduler</em></p></li>
+<li><p><strong>(not implemented yet).</strong> (<em>Tuple[torch.optim.Adam, None]</em>)</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.export">
+<span class="sig-name descname"><span class="pre">export</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">save_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'onnx'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.export"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.export" title="Link to this definition"></a></dt>
+<dd><p>Export the model to a specified format for deployment.
+TFLite and OpenVINO need a Linux machine to be exported.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>save_dir</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – The directory where the exported model will be saved.</p></li>
+<li><p><strong>out_format</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – The format for exporting the model. Default is ‘onnx’.</p></li>
+<li><p><strong>input_shape</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>]</em>) – The input shape of the model. If not provided, the input shape
+specified during model creation is used.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.forward">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.forward" title="Link to this definition"></a></dt>
+<dd><p>Forward step of the class. It gets called during inference and optimization.
+This method should be overwritten for specific applications.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>batch</strong> (<em>torch.Tensor</em>) – Batch as output from the defined DataLoader.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>pred</strong> – Predictions - this depends on the task.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[torch.Tensor, Tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.load_modules">
+<span class="sig-name descname"><span class="pre">load_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.load_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.load_modules" title="Link to this definition"></a></dt>
+<dd><p>Loads models for path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>checkpoint_path</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – Path to the checkpoint where the modules are stored.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.on_train_end">
+<span class="sig-name descname"><span class="pre">on_train_end</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.on_train_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.on_train_end" title="Link to this definition"></a></dt>
+<dd><p>Runs at the end of each training. Cleans up before exiting.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.on_train_start">
+<span class="sig-name descname"><span class="pre">on_train_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.on_train_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.on_train_start" title="Link to this definition"></a></dt>
+<dd><p>Initializes the optimizer, modules and puts the networks on the right
+devices. Optionally loads checkpoint if already present.</p>
+<p>This function gets executed at the beginning of every training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.set_input_shape">
+<span class="sig-name descname"><span class="pre">set_input_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(3,</span> <span class="pre">224,</span> <span class="pre">224)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.set_input_shape"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.set_input_shape" title="Link to this definition"></a></dt>
+<dd><p>Setter function for input_shape.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>input_shape</strong> (<em>Tuple</em>) – Input shape of the forward step.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.test">
+<span class="sig-name descname"><span class="pre">test</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">datasets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.test"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.test" title="Link to this definition"></a></dt>
+<dd><p>Runs the test steps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">datasets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#micromind.core.Metric" title="micromind.core.Metric"><span class="pre">Metric</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.train" title="Link to this definition"></a></dt>
+<dd><p>This method trains the model on the provided training dataset for the
+specified number of epochs. It tracks training metrics and can
+optionally perform validation during training, if the validation set is
+provided.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>epochs</strong> (<em>int</em>) – The number of training epochs.</p></li>
+<li><p><strong>datasets</strong> (<em>Dict</em>) – A dictionary of dataset loaders. Dataloader should be mapped to keys
+“train”, “val”, and “test”.</p></li>
+<li><p><strong>metrics</strong> (<em>Optional</em><em>[</em><em>List</em><em>[</em><a class="reference internal" href="#micromind.core.Metric" title="micromind.core.Metric"><em>Metric</em></a><em>]</em><em>]</em>) – A list of metrics to track during training. Default is an empty list.</p></li>
+<li><p><strong>debug</strong> (<em>bool</em>) – Whether to run in debug mode. Default is False. If in debug mode,
+only runs for few epochs
+and with few batches.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.core.MicroMind.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span></span></span><a class="reference internal" href="_modules/micromind/core.html#MicroMind.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.MicroMind.validate" title="Link to this definition"></a></dt>
+<dd><p>Runs the validation step.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.core.Stage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.core.</span></span><span class="sig-name descname"><span class="pre">Stage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/core.html#Stage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.core.Stage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>enum to track training stage</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="micromind.core.Stage.test">
+<span class="sig-name descname"><span class="pre">test</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#micromind.core.Stage.test" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="micromind.core.Stage.train">
+<span class="sig-name descname"><span class="pre">train</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#micromind.core.Stage.train" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="micromind.core.Stage.val">
+<span class="sig-name descname"><span class="pre">val</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#micromind.core.Stage.val" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-micromind.convert">
+<span id="micromind-convert-module"></span><h2>micromind.convert module<a class="headerlink" href="#module-micromind.convert" title="Link to this heading"></a></h2>
+<p>Conversion from pytorch to different standard formats
+for inference (ONNX, OpenVINO, tflite).</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Francesco Paissan, 2023</p></li>
+<li><p>Alberto Ancilotto, 2023</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.convert.convert_to_onnx">
+<span class="sig-prename descclassname"><span class="pre">micromind.convert.</span></span><span class="sig-name descname"><span class="pre">convert_to_onnx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">net</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'model.onnx'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_forward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/convert.html#convert_to_onnx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.convert.convert_to_onnx" title="Link to this definition"></a></dt>
+<dd><p>Converts nn.Module to onnx and saves it to save_path.
+Optionally simplifies it.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.convert.convert_to_openvino">
+<span class="sig-prename descclassname"><span class="pre">micromind.convert.</span></span><span class="sig-name descname"><span class="pre">convert_to_openvino</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">net</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_forward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/micromind/convert.html#convert_to_openvino"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.convert.convert_to_openvino" title="Link to this definition"></a></dt>
+<dd><p>Converts nn.Module to OpenVINO.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.convert.convert_to_tflite">
+<span class="sig-prename descclassname"><span class="pre">micromind.convert.</span></span><span class="sig-name descname"><span class="pre">convert_to_tflite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">net</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_quant</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replace_forward</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/micromind/convert.html#convert_to_tflite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.convert.convert_to_tflite" title="Link to this definition"></a></dt>
+<dd><p>Converts nn.Module to tf_lite, optionally quantizes it.</p>
+</dd></dl>
+
+</section>
+<section id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Link to this heading"></a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="micromind.networks.html">micromind.networks package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="micromind.networks.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="micromind.networks.html#module-micromind.networks.phinet">micromind.networks.phinet module</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="micromind.utils.html">micromind.utils package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="micromind.utils.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="micromind.utils.html#module-micromind.utils.checkpointer">micromind.utils.checkpointer module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="micromind.utils.html#module-micromind.utils.helpers">micromind.utils.helpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="micromind.utils.html#module-micromind.utils.parse">micromind.utils.parse module</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-left" title="micromind" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="micromind.networks.html" class="btn btn-neutral float-right" title="micromind.networks package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MicroMind.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

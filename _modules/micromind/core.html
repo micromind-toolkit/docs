@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>micromind.core &mdash; micromind 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            micromind
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">micromind</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How To Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contribution.html">Guide for Contributing to micromind</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">micromind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">micromind.core</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for micromind.core</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Core class for micromind. Supports helper function for exports. Out-of-the-box</span>
+<span class="sd">multi-gpu and FP16 training with HF Accelerate and much more.</span>
+
+<span class="sd">Authors:</span>
+<span class="sd">    - Francesco Paissan, 2023</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">Namespace</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+
+<span class="kn">from</span> <span class="nn">accelerate</span> <span class="kn">import</span> <span class="n">Accelerator</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">.utils.helpers</span> <span class="kn">import</span> <span class="n">select_and_load_checkpoint</span><span class="p">,</span> <span class="n">get_random_string</span>
+<span class="kn">from</span> <span class="nn">.utils.checkpointer</span> <span class="kn">import</span> <span class="n">Checkpointer</span>
+
+<span class="c1"># This is used ONLY if you are not using argparse to get the hparams</span>
+<span class="n">default_cfg</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;output_folder&quot;</span><span class="p">:</span> <span class="s2">&quot;results&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;experiment_name&quot;</span><span class="p">:</span> <span class="s2">&quot;micromind_exp&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;opt&quot;</span><span class="p">:</span> <span class="s2">&quot;adam&quot;</span><span class="p">,</span>  <span class="c1"># this is ignored if you are overriding the configure_optimizers</span>
+    <span class="s2">&quot;lr&quot;</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span>  <span class="c1"># this is ignored if you are overriding the configure_optimizers</span>
+    <span class="s2">&quot;debug&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="Stage">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.Stage">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Stage</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;enum to track training stage&quot;&quot;&quot;</span>
+
+    <span class="n">train</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">val</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">test</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="Metric">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.Metric">[docs]</a>
+<span class="k">class</span> <span class="nc">Metric</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class for tracking evaluation metrics during training.</span>
+
+<span class="sd">    This class allows you to create custom evaluation metrics by providing a</span>
+<span class="sd">    function to compute the metric and specifying a reduction method.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">        name : str</span>
+<span class="sd">            The name of the metric.</span>
+<span class="sd">        fn : Callable</span>
+<span class="sd">            A function that computes the metric given predictions and batch data.</span>
+<span class="sd">        reduction : Optional[str]</span>
+<span class="sd">            The reduction method for the metric (&#39;sum&#39; or &#39;mean&#39;). Default is &#39;mean&#39;.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">        Reduced metric. Optionally, you can access the metric history</span>
+<span class="sd">        before call reduce(clear=True) : torch.Tensor</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; from micromind import Metric, Stage</span>
+<span class="sd">        &gt;&gt;&gt; import torch</span>
+
+<span class="sd">        &gt;&gt;&gt; def custom_metric(pred, batch):</span>
+<span class="sd">        ...     # Replace this with your custom metric calculation</span>
+<span class="sd">        ...     return pred - batch</span>
+
+<span class="sd">        &gt;&gt;&gt; metric = Metric(&quot;Custom Metric&quot;, custom_metric, reduction=&quot;mean&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; pred = torch.tensor([1.0, 2.0, 3.0])</span>
+<span class="sd">        &gt;&gt;&gt; batch = torch.tensor([0.5, 1.5, 2.5])</span>
+<span class="sd">        &gt;&gt;&gt; metric(pred, batch, stage=Stage.train)</span>
+<span class="sd">        &gt;&gt;&gt; metric.history</span>
+<span class="sd">        {0: [tensor([0.5000, 0.5000, 0.5000])], 1: [], 2: []}</span>
+<span class="sd">        &gt;&gt;&gt; metric.reduce(Stage.train)</span>
+<span class="sd">        0.5</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fn</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s2">&quot;mean&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fn</span> <span class="o">=</span> <span class="n">fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">=</span> <span class="n">reduction</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">[</span><span class="n">Stage</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">test</span><span class="p">]}</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">pred</span><span class="o">.</span><span class="n">device</span> <span class="o">!=</span> <span class="n">device</span><span class="p">:</span>
+            <span class="n">pred</span> <span class="o">=</span> <span class="n">pred</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">dat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dat</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dat</span> <span class="o">=</span> <span class="n">dat</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fn</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">batch</span><span class="p">))</span>
+
+<div class="viewcode-block" id="Metric.reduce">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.Metric.reduce">[docs]</a>
+    <span class="k">def</span> <span class="nf">reduce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stage</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute and return the metric for a given prediction and batch data.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        -------</span>
+<span class="sd">            pred : torch.Tensor</span>
+<span class="sd">                The model&#39;s prediction.</span>
+<span class="sd">            batch : torch.Tensor</span>
+<span class="sd">                The ground truth or target values.</span>
+<span class="sd">            stage : Stage</span>
+<span class="sd">                The current stage (e.g., Stage.train).</span>
+<span class="sd">            device Optional[str]</span>
+<span class="sd">                The device on which to perform the computation. Default is &#39;cpu&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">==</span> <span class="s2">&quot;mean&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">clear</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">):</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">reduction</span> <span class="o">==</span> <span class="s2">&quot;sum&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span>
+                <span class="n">clear</span>
+                <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">):</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">tmp</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">clear</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="n">stage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">return</span> <span class="n">tmp</span><span class="o">.</span><span class="n">item</span><span class="p">()</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MicroMind">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind">[docs]</a>
+<span class="k">class</span> <span class="nc">MicroMind</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    MicroMind is an abstract base class for creating and training deep learning</span>
+<span class="sd">    models. Handles training on multi-gpu via accelerate (using DDP and other</span>
+<span class="sd">    distributed training strategies). It automatically handles the device</span>
+<span class="sd">    management for the training and the micromind&#39;s export capabilities to onnx,</span>
+<span class="sd">    OpenVino and TFLite.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">        hparams : Optional[Namespace]</span>
+<span class="sd">            Hyperparameters for the model. Default is None.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">hparams</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">hparams</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">hparams</span> <span class="o">=</span> <span class="n">Namespace</span><span class="p">(</span><span class="o">**</span><span class="n">default_cfg</span><span class="p">)</span>
+
+        <span class="c1"># here we should handle devices etc.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ModuleDict</span><span class="p">({})</span>  <span class="c1"># init empty modules dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span> <span class="o">=</span> <span class="n">hparams</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="s2">&quot;cpu&quot;</span>  <span class="c1"># used just to init the models</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span> <span class="o">=</span> <span class="n">Accelerator</span><span class="p">()</span>
+
+<div class="viewcode-block" id="MicroMind.forward">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.forward">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Forward step of the class. It gets called during inference and optimization.</span>
+<span class="sd">        This method should be overwritten for specific applications.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">            batch : torch.Tensor</span>
+<span class="sd">                Batch as output from the defined DataLoader.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            pred : Union[torch.Tensor, Tuple]</span>
+<span class="sd">                Predictions - this depends on the task.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.compute_loss">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.compute_loss">[docs]</a>
+    <span class="nd">@abstractmethod</span>
+    <span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes the cost function for the optimization process.  It return a</span>
+<span class="sd">        tensor on which backward() is called. This method should be overwritten</span>
+<span class="sd">        for the specific application.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">            pred : Union[torch.Tensor, Tuple]</span>
+<span class="sd">                Output of the forward() function</span>
+<span class="sd">            batch : torch.Tensor</span>
+<span class="sd">                Batch as defined from the DataLoader.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            loss : torch.Tensor</span>
+<span class="sd">                Compute cost function.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.set_input_shape">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.set_input_shape">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_input_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">:</span> <span class="n">Tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">)):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Setter function for input_shape.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">            input_shape : Tuple</span>
+<span class="sd">                Input shape of the forward step.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="o">=</span> <span class="n">input_shape</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.load_modules">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.load_modules">[docs]</a>
+    <span class="k">def</span> <span class="nf">load_modules</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Loads models for path.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">            checkpoint_path : Union[Path, str]</span>
+<span class="sd">                Path to the checkpoint where the modules are stored.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">checkpoint_path</span><span class="p">)</span>
+
+        <span class="n">modules_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">load_state_dict</span><span class="p">(</span><span class="n">dat</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+
+            <span class="n">modules_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">modules_keys</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">modules_keys</span><span class="p">)</span>
+            <span class="nb">breakpoint</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Couldn&#39;t find a state_dict for modules </span><span class="si">{</span><span class="n">modules_keys</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.export">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.export">[docs]</a>
+    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">out_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;onnx&quot;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export the model to a specified format for deployment.</span>
+<span class="sd">        TFLite and OpenVINO need a Linux machine to be exported.</span>
+
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        save_dir : Union[Path, str]</span>
+<span class="sd">            The directory where the exported model will be saved.</span>
+<span class="sd">        out_format : Optional[str]</span>
+<span class="sd">            The format for exporting the model. Default is &#39;onnx&#39;.</span>
+<span class="sd">        input_shape : Optional[Tuple]</span>
+<span class="sd">            The input shape of the model. If not provided, the input shape</span>
+<span class="sd">            specified during model creation is used.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">micromind</span> <span class="kn">import</span> <span class="n">convert</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">Path</span><span class="p">):</span>
+            <span class="n">save_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span>
+        <span class="n">save_dir</span> <span class="o">=</span> <span class="n">save_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">experiment_name</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_input_shape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_shape</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">),</span> <span class="s2">&quot;You should pass the input_shape of the model.&quot;</span>
+
+        <span class="k">if</span> <span class="n">out_format</span> <span class="o">==</span> <span class="s2">&quot;onnx&quot;</span><span class="p">:</span>
+            <span class="n">convert</span><span class="o">.</span><span class="n">convert_to_onnx</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="o">.</span><span class="n">joinpath</span><span class="p">(</span><span class="s2">&quot;model.onnx&quot;</span><span class="p">),</span> <span class="n">replace_forward</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">out_format</span> <span class="o">==</span> <span class="s2">&quot;openvino&quot;</span><span class="p">:</span>
+            <span class="n">convert</span><span class="o">.</span><span class="n">convert_to_openvino</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">replace_forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">out_format</span> <span class="o">==</span> <span class="s2">&quot;tflite&quot;</span><span class="p">:</span>
+            <span class="n">convert</span><span class="o">.</span><span class="n">convert_to_tflite</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">save_dir</span><span class="p">,</span> <span class="n">replace_forward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.configure_optimizers">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.configure_optimizers">[docs]</a>
+    <span class="k">def</span> <span class="nf">configure_optimizers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Configures and defines the optimizer for the task. Defaults to adam</span>
+<span class="sd">        with lr=0.001; It can be overwritten by either passing arguments from the</span>
+<span class="sd">        command line, or by overwriting this entire method.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ---------</span>
+<span class="sd">           Optimizer and learning rate scheduler</span>
+<span class="sd">           (not implemented yet). : Tuple[torch.optim.Adam, None]</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">opt</span> <span class="ow">in</span> <span class="p">[</span>
+            <span class="s2">&quot;adam&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sgd&quot;</span><span class="p">,</span>
+        <span class="p">],</span> <span class="sa">f</span><span class="s2">&quot;Optimizer </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">opt</span><span class="si">}</span><span class="s2"> not supported.&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;adam&quot;</span><span class="p">:</span>
+            <span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">opt</span> <span class="o">==</span> <span class="s2">&quot;sgd&quot;</span><span class="p">:</span>
+            <span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">opt</span><span class="p">,</span> <span class="kc">None</span>  <span class="c1"># None is for learning rate sched</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">xv</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Just forwards everything to the forward method.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="o">**</span><span class="n">xv</span><span class="p">)</span>
+
+<div class="viewcode-block" id="MicroMind.on_train_start">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.on_train_start">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_train_start</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the optimizer, modules and puts the networks on the right</span>
+<span class="sd">        devices. Optionally loads checkpoint if already present.</span>
+
+<span class="sd">        This function gets executed at the beginning of every training.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">output_folder</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">experiment_name</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span> <span class="o">=</span> <span class="s2">&quot;tmp_&quot;</span> <span class="o">+</span> <span class="n">get_random_string</span><span class="p">()</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created temporary folder for debug </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+
+        <span class="n">save_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span><span class="p">,</span> <span class="s2">&quot;save&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">save_dir</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">save_dir</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># select which checkpoint and load it.</span>
+                <span class="n">checkpoint</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">select_and_load_checkpoint</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">opt</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;optimizer&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">lr_sched</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;lr_scheduler&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">start_epoch</span> <span class="o">=</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;epoch&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">load_modules</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_local_main_process</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">checkpointer</span> <span class="o">=</span> <span class="n">Checkpointer</span><span class="p">(</span>
+                        <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">],</span>
+                        <span class="n">mode</span><span class="o">=</span><span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;mode&quot;</span><span class="p">],</span>
+                        <span class="n">checkpoint_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span><span class="p">,</span>
+                    <span class="p">)</span>
+
+                    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Loaded existing checkpoint from </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr_sched</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configure_optimizers</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">start_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">checkpointer</span> <span class="o">=</span> <span class="n">Checkpointer</span><span class="p">(</span>
+                    <span class="s2">&quot;val_loss&quot;</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span>
+                <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr_sched</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">configure_optimizers</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">start_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">checkpointer</span> <span class="o">=</span> <span class="n">Checkpointer</span><span class="p">(</span>
+                <span class="s2">&quot;val_loss&quot;</span><span class="p">,</span> <span class="n">checkpoint_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span> <span class="o">=</span> <span class="n">Accelerator</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">device</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">device</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Set device to &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+        <span class="n">convert</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr_sched</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">accelerated</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">convert</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr_sched</span> <span class="o">=</span> <span class="n">accelerated</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">accelerated</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.on_train_end">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.on_train_end">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_train_end</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs at the end of each training. Cleans up before exiting.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">hparams</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed temporary folder </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">experiment_folder</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_local_main_process</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">checkpointer</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.train">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.train">[docs]</a>
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">epochs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">datasets</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{},</span>
+        <span class="n">metrics</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Metric</span><span class="p">]</span> <span class="o">=</span> <span class="p">[],</span>
+        <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method trains the model on the provided training dataset for the</span>
+<span class="sd">        specified number of epochs. It tracks training metrics and can</span>
+<span class="sd">        optionally perform validation during training, if the validation set is</span>
+<span class="sd">        provided.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        epochs : int</span>
+<span class="sd">            The number of training epochs.</span>
+<span class="sd">        datasets : Dict</span>
+<span class="sd">            A dictionary of dataset loaders. Dataloader should be mapped to keys</span>
+<span class="sd">            &quot;train&quot;, &quot;val&quot;, and &quot;test&quot;.</span>
+<span class="sd">        metrics : Optional[List[Metric]]</span>
+<span class="sd">            A list of metrics to track during training. Default is an empty list.</span>
+<span class="sd">        debug : bool</span>
+<span class="sd">            Whether to run in debug mode. Default is False. If in debug mode,</span>
+<span class="sd">            only runs for few epochs</span>
+<span class="sd">            and with few batches.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span> <span class="o">=</span> <span class="n">datasets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span>
+        <span class="k">assert</span> <span class="s2">&quot;train&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="s2">&quot;Training dataloader was not specified.&quot;</span>
+        <span class="k">assert</span> <span class="n">epochs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;You must specify at least one epoch.&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="n">debug</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_train_start</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_local_main_process</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Starting from epoch </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">start_epoch</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="o">+</span> <span class="sa">f</span><span class="s2">&quot; Training is scheduled for </span><span class="si">{</span><span class="n">epochs</span><span class="si">}</span><span class="s2"> epochs.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">autocast</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">start_epoch</span><span class="p">,</span> <span class="n">epochs</span><span class="p">):</span>
+                <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s2">&quot;train&quot;</span><span class="p">],</span>
+                    <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;batches&quot;</span><span class="p">,</span>
+                    <span class="n">ascii</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">dynamic_ncols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_local_main_process</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">loss_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Running epoch </span><span class="si">{</span><span class="n">e</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">epochs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">train</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pbar</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                        <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+                    <span class="n">model_out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+                    <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">model_out</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+
+                    <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">backward</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+
+                    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span>
+                        <span class="n">m</span><span class="p">(</span><span class="n">model_out</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+                    <span class="n">running_train</span> <span class="o">=</span> <span class="p">{</span>
+                        <span class="s2">&quot;train_&quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">Stage</span><span class="o">.</span><span class="n">train</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span>
+                    <span class="p">}</span>
+
+                    <span class="n">running_train</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;train_loss&quot;</span><span class="p">:</span> <span class="n">loss_epoch</span> <span class="o">/</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)})</span>
+
+                    <span class="n">loss_epoch</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                    <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="o">**</span><span class="n">running_train</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="ow">and</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                        <span class="k">break</span>
+
+                <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+                <span class="n">train_metrics</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;train_&quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">Stage</span><span class="o">.</span><span class="n">train</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span>
+                <span class="p">}</span>
+                <span class="n">train_metrics</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;train_loss&quot;</span><span class="p">:</span> <span class="n">loss_epoch</span> <span class="o">/</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)})</span>
+
+                <span class="k">if</span> <span class="s2">&quot;val&quot;</span> <span class="ow">in</span> <span class="n">datasets</span><span class="p">:</span>
+                    <span class="n">val_metrics</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_local_main_process</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">checkpointer</span><span class="p">(</span>
+                            <span class="bp">self</span><span class="p">,</span>
+                            <span class="n">e</span><span class="p">,</span>
+                            <span class="n">train_metrics</span><span class="p">,</span>
+                            <span class="n">val_metrics</span><span class="p">,</span>
+                            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">unwrap_model</span><span class="p">(</span><span class="n">x</span><span class="p">),</span>
+                        <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">val_metrics</span> <span class="o">=</span> <span class="n">train_metrics</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+                        <span class="p">{</span><span class="s2">&quot;val_loss&quot;</span><span class="p">:</span> <span class="n">loss_epoch</span> <span class="o">/</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)}</span>
+                    <span class="p">)</span>
+
+                <span class="k">if</span> <span class="n">e</span> <span class="o">&gt;=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_train_end</span><span class="p">()</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.validate">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.validate">[docs]</a>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the validation step.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;val&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="s2">&quot;Validation dataloader was not specified.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s2">&quot;val&quot;</span><span class="p">],</span>
+            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;batches&quot;</span><span class="p">,</span>
+            <span class="n">ascii</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">dynamic_ncols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_local_main_process</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">loss_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">&quot;Validation...&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">autocast</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pbar</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+                <span class="n">model_out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">model_out</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span>
+                    <span class="n">m</span><span class="p">(</span><span class="n">model_out</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+                <span class="n">loss_epoch</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss_epoch</span> <span class="o">/</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="ow">and</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>
+                    <span class="k">break</span>
+
+        <span class="n">val_metrics</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;val_&quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">Stage</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">}</span>
+        <span class="n">val_metrics</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;val_loss&quot;</span><span class="p">:</span> <span class="n">loss_epoch</span> <span class="o">/</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)})</span>
+
+        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">val_metrics</span></div>
+
+
+<div class="viewcode-block" id="MicroMind.test">
+<a class="viewcode-back" href="../../micromind.html#micromind.core.MicroMind.test">[docs]</a>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">datasets</span><span class="p">:</span> <span class="n">Dict</span> <span class="o">=</span> <span class="p">{})</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Runs the test steps.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s2">&quot;test&quot;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">,</span> <span class="s2">&quot;Test dataloader was not specified.&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+
+        <span class="n">pbar</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">datasets</span><span class="p">[</span><span class="s2">&quot;test&quot;</span><span class="p">],</span>
+            <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;batches&quot;</span><span class="p">,</span>
+            <span class="n">ascii</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">dynamic_ncols</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">disable</span><span class="o">=</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">is_local_main_process</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">loss_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">pbar</span><span class="o">.</span><span class="n">set_description</span><span class="p">(</span><span class="s2">&quot;Testing...&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">autocast</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">batch</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pbar</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="n">batch</span> <span class="o">=</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">batch</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+
+                <span class="n">model_out</span> <span class="o">=</span> <span class="bp">self</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">compute_loss</span><span class="p">(</span><span class="n">model_out</span><span class="p">,</span> <span class="n">batch</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span><span class="p">:</span>
+                    <span class="n">m</span><span class="p">(</span><span class="n">model_out</span><span class="p">,</span> <span class="n">batch</span><span class="p">,</span> <span class="n">Stage</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+
+                <span class="n">loss_epoch</span> <span class="o">+=</span> <span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+                <span class="n">pbar</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="n">loss_epoch</span> <span class="o">/</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">pbar</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">test_metrics</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;test_&quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">reduce</span><span class="p">(</span><span class="n">Stage</span><span class="o">.</span><span class="n">test</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">metrics</span>
+        <span class="p">}</span>
+        <span class="n">test_metrics</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;test_loss&quot;</span><span class="p">:</span> <span class="n">loss_epoch</span> <span class="o">/</span> <span class="p">(</span><span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)})</span>
+        <span class="n">s_out</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Testing &quot;</span>
+            <span class="o">+</span> <span class="s2">&quot; - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">test_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+            <span class="o">+</span> <span class="s2">&quot;; &quot;</span>
+        <span class="p">)</span>
+
+        <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">s_out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MicroMind.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

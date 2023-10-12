@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Welcome to micromind’s documentation! &mdash; micromind 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="micromind" href="modules.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            micromind
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">micromind</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How To Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Guide for Contributing to micromind</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">micromind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Welcome to micromind’s documentation!</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="welcome-to-micromind-s-documentation">
+<h1>Welcome to micromind’s documentation!<a class="headerlink" href="#welcome-to-micromind-s-documentation" title="Link to this heading"></a></h1>
+<a class="reference external image-reference" href="https://www.python.org/downloads/"><img alt="https://img.shields.io/badge/python-3.8%20|3.9%20|%203.10-blue" src="https://img.shields.io/badge/python-3.8%20|3.9%20|%203.10-blue" /></a>
+<a class="reference external image-reference" href="https://github.com/fpaissan/micromind/blob/main/LICENSE"><img alt="https://img.shields.io/badge/License-Apache_2.0-blue.svg" src="https://img.shields.io/badge/License-Apache_2.0-blue.svg" /></a>
+<a class="reference external image-reference" href="https://pypi.org/project/micromind/"><img alt="https://img.shields.io/pypi/v/micromind" src="https://img.shields.io/pypi/v/micromind" /></a>
+<p>This is the official repository of <cite>micromind</cite>, a toolkit that aims to bridge two communities: artificial intelligence and embedded systems. <cite>micromind</cite> is based on <a class="reference external" href="https://pytorch.org">PyTorch</a> and provides exportability for the supported models in ONNX, Intel OpenVINO, and TFLite.</p>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>Smooth flow from research to deployment;</p></li>
+<li><p>Support for multimedia analytics recipes (image classification, sound event detection, etc);</p></li>
+<li><p>Detailed API documentation;</p></li>
+<li><p>Tutorials for embedded deployment.</p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<section id="using-pip">
+<h3>Using Pip<a class="headerlink" href="#using-pip" title="Link to this heading"></a></h3>
+<p>First of all, install <a class="reference external" href="https://www.python.org">Python 3.8 or later</a>. Open a terminal and run:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>micromind
+</pre></div>
+</div>
+<p>for the basic install. To install <cite>micromind</cite> with the full exportability features, run</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>micromind<span class="o">[</span>conversion<span class="o">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="basic-how-to">
+<h2>Basic how-to<a class="headerlink" href="#basic-how-to" title="Link to this heading"></a></h2>
+<p>If you want to launch a simple training on an image classification model, you just need to define a class that extends <a class="reference external" href="https://micromind.readthedocs.org/en/latest/micromind.html#micromind.core.MicroMind">MicroMind</a>, defining the modules you want to use, such as a <cite>PhiNet</cite>, the forward method of the model and the way in which to calculate your loss function. micromind takes care of the rest for you.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">ImageClassification</span><span class="p">(</span><span class="n">MicroMind</span><span class="p">):</span>
+   <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;classifier&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PhiNet</span><span class="p">(</span>
+         <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">include_top</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">10</span>
+      <span class="p">)</span>
+
+   <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s2">&quot;classifier&quot;</span><span class="p">](</span><span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+   <span class="k">def</span> <span class="nf">compute_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">batch</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()(</span><span class="n">pred</span><span class="p">,</span> <span class="n">batch</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>Afterwards, you can export the model in the format you like best between <strong>ONNX</strong>, <strong>TFLite</strong> and <strong>OpenVINO</strong>, just run this simple code:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">ImageClassification</span><span class="p">()</span>
+<span class="n">m</span><span class="o">.</span><span class="n">export</span><span class="p">(</span><span class="s2">&quot;output_onnx&quot;</span><span class="p">,</span> <span class="s2">&quot;onnx&quot;</span><span class="p">,</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Here is the link to the Python <a class="reference external" href="https://github.com/micromind-toolkit/micromind/blob/mm_refactor/examples/mind.py">file</a> inside our repository that illustrates how to use the MicroMind class.</p>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">micromind</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="micromind.html">micromind package</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+<section id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Link to this heading"></a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">How To Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Guide for Contributing to micromind</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#step-0-preparing-the-environment">Step 0 - Preparing the Environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#step-1-creating-a-fork-from-the-original-repository">Step 1 - Creating a Fork from the Original Repository</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#step-2-installation">Step 2 - Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#step-3-creating-a-new-branch">Step 3 - Creating a New Branch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#step-4-implementing-changes">Step 4 - Implementing Changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#step-5-unit-tests-and-linters-check">Step 5 - Unit tests and linters check</a></li>
+<li class="toctree-l2"><a class="reference internal" href="contribution.html#step-6-making-a-pull-request">Step 6 - Making a Pull Request</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="modules.html" class="btn btn-neutral float-right" title="micromind" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MicroMind.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>micromind.utils package &mdash; micromind 0.0.1 documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Guide for Contributing to micromind" href="contribution.html" />
+    <link rel="prev" title="micromind.networks package" href="micromind.networks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            micromind
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">micromind</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="micromind.html">micromind package</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="micromind.html#module-micromind.core">micromind.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="micromind.html#module-micromind.convert">micromind.convert module</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="micromind.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="micromind.networks.html">micromind.networks package</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">micromind.utils package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How To Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contribution.html">Guide for Contributing to micromind</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">micromind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">micromind</a></li>
+          <li class="breadcrumb-item"><a href="micromind.html">micromind package</a></li>
+      <li class="breadcrumb-item active">micromind.utils package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/micromind.utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="micromind-utils-package">
+<h1>micromind.utils package<a class="headerlink" href="#micromind-utils-package" title="Link to this heading"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading"></a></h2>
+</section>
+<section id="module-micromind.utils.checkpointer">
+<span id="micromind-utils-checkpointer-module"></span><h2>micromind.utils.checkpointer module<a class="headerlink" href="#module-micromind.utils.checkpointer" title="Link to this heading"></a></h2>
+<p>micromind checkpointer. Unwraps models and saves the to disk with optimizer’s
+state etc.</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Francesco Paissan, 2023</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.utils.checkpointer.Checkpointer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.utils.checkpointer.</span></span><span class="sig-name descname"><span class="pre">Checkpointer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#Checkpointer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.Checkpointer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.utils.checkpointer.Checkpointer.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#Checkpointer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.Checkpointer.close" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-micromind.utils.helpers">
+<span id="micromind-utils-helpers-module"></span><h2>micromind.utils.helpers module<a class="headerlink" href="#module-micromind.utils.helpers" title="Link to this heading"></a></h2>
+<p>micromind helper functions.</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Francesco Paissan, 2023</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.helpers.get_random_string">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">get_random_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/helpers.html#get_random_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.get_random_string" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.helpers.get_value_from_key">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">get_value_from_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cast=&lt;class</span> <span class="pre">'float'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/micromind/utils/helpers.html#get_value_from_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.get_value_from_key" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.helpers.select_and_load_checkpoint">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">select_and_load_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/micromind/utils/helpers.html#select_and_load_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.select_and_load_checkpoint" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-micromind.utils.parse">
+<span id="micromind-utils-parse-module"></span><h2>micromind.utils.parse module<a class="headerlink" href="#module-micromind.utils.parse" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.parse.parse_arguments">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.parse.</span></span><span class="sig-name descname"><span class="pre">parse_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/parse.html#parse_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.parse.parse_arguments" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="micromind.networks.html" class="btn btn-neutral float-left" title="micromind.networks package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="contribution.html" class="btn btn-neutral float-right" title="Guide for Contributing to micromind" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MicroMind.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
