@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>micromind.utils package &mdash; micromind 0.0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -106,13 +108,75 @@ state etc.</p>
 </dl>
 <dl class="py class">
 <dt class="sig sig-object py" id="micromind.utils.checkpointer.Checkpointer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.utils.checkpointer.</span></span><span class="sig-name descname"><span class="pre">Checkpointer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'.'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#Checkpointer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.Checkpointer" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.utils.checkpointer.</span></span><span class="sig-name descname"><span class="pre">Checkpointer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">experiment_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'loss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Namespace</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#Checkpointer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.Checkpointer" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Checkpointer class. Supports min/max modes for arbitrary keys (Metrics or loss).
+Always saves best and last in the experiment folder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>experiment_folder</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Experiment folder. Used to load / store checkpoints.</p></li>
+<li><p><strong>key</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Key to be logged. It should be the name of the Metric, or “loss”.
+Defaults to “loss”.</p></li>
+<li><p><strong>mode</strong> (<em>Optional</em><em>[</em><em>str</em><em>]</em>) – Either <cite>min</cite> or <cite>max</cite>. If min, will store the checkpoint with the lowest
+value for key. If max, it does the opposite.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">micromind.utils.checkpointer</span> <span class="kn">import</span> <span class="n">Checkpointer</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">micromind.utils.checkpointer</span> <span class="kn">import</span> <span class="n">create_experiment_folder</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">exp_folder</span> <span class="o">=</span> <span class="n">create_experiment_folder</span><span class="p">(</span><span class="s2">&quot;/tmp&quot;</span><span class="p">,</span> <span class="s2">&quot;test_mm&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">check</span> <span class="o">=</span> <span class="n">Checkpointer</span><span class="p">(</span><span class="n">exp_folder</span><span class="p">)</span>
+</pre></div>
+</div>
 <dl class="py method">
-<dt class="sig sig-object py" id="micromind.utils.checkpointer.Checkpointer.close">
-<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#Checkpointer.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.Checkpointer.close" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="micromind.utils.checkpointer.Checkpointer.dump_modules">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dump_modules</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">modules</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_folder</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#Checkpointer.dump_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.Checkpointer.dump_modules" title="Link to this definition"></a></dt>
+<dd><p>Dumps state dict for all elements in the modules.</p>
+</dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.utils.checkpointer.Checkpointer.dump_status">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dump_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#Checkpointer.dump_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.Checkpointer.dump_status" title="Link to this definition"></a></dt>
+<dd><p>Dumps the status of the training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.utils.checkpointer.Checkpointer.recover_state">
+<span class="sig-name descname"><span class="pre">recover_state</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#Checkpointer.recover_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.Checkpointer.recover_state" title="Link to this definition"></a></dt>
+<dd><p>Recovers last corrected state of the training. If found, returns
+the accelerate dump folder (for recovery) and the last epoch logged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>Checkpoint path and last epoch logged.</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Tuple[str, int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.checkpointer.create_experiment_folder">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.checkpointer.</span></span><span class="sig-name descname"><span class="pre">create_experiment_folder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_folder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exp_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="_modules/micromind/utils/checkpointer.html#create_experiment_folder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.checkpointer.create_experiment_folder" title="Link to this definition"></a></dt>
+<dd><p>Creates the experiment folder used to log data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>output_folder</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – General output folder (can be shared between more experiments).</p></li>
+<li><p><strong>exp_name</strong> (<em>Union</em><em>[</em><em>Path</em><em>, </em><em>str</em><em>]</em>) – Name of the experiment, to be concatenated to the output_folder.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Experiment folder</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Union[Path, str]</p>
+</dd>
+</dl>
 </dd></dl>
 
 </section>
@@ -126,27 +190,523 @@ state etc.</p>
 </dd>
 </dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="micromind.utils.helpers.get_random_string">
-<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">get_random_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/helpers.html#get_random_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.get_random_string" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="micromind.utils.helpers.get_logger">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">get_logger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/helpers.html#get_logger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.get_logger" title="Link to this definition"></a></dt>
+<dd><p>Default loguru logger config. It is called inside micromind’s files.</p>
+</dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="micromind.utils.helpers.get_value_from_key">
-<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">get_value_from_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key:</span> <span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cast=&lt;class</span> <span class="pre">'float'&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/micromind/utils/helpers.html#get_value_from_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.get_value_from_key" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="micromind.utils.helpers.override_conf">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">override_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hparams</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/helpers.html#override_conf"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.override_conf" title="Link to this definition"></a></dt>
+<dd><p>Handles command line overrides. Takes as input a configuration
+and defines all the keys as arguments. If passed from command line,
+these arguments override the default configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hparams</strong> (<em>Dict</em>) – Dictionary containing current configuration.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Configuration agumented with overrides.</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Namespace</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="micromind.utils.helpers.select_and_load_checkpoint">
-<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">select_and_load_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/micromind/utils/helpers.html#select_and_load_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.select_and_load_checkpoint" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dt class="sig sig-object py" id="micromind.utils.helpers.parse_configuration">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.helpers.</span></span><span class="sig-name descname"><span class="pre">parse_configuration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/helpers.html#parse_configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.helpers.parse_configuration" title="Link to this definition"></a></dt>
+<dd><p>Parses default configuration and compares it with user defined.
+It processes a user-defined python file that creates the configuration.
+Additionally, it handles eventual overrides from command line.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cfg</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>Path</em><em>]</em>) – Configuration file defined by the user</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Configuration Namespace.</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>argparse.Namespace</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
-<section id="module-micromind.utils.parse">
-<span id="micromind-utils-parse-module"></span><h2>micromind.utils.parse module<a class="headerlink" href="#module-micromind.utils.parse" title="Link to this heading"></a></h2>
+<section id="module-micromind.utils.yolo">
+<span id="micromind-utils-yolo-module"></span><h2>micromind.utils.yolo module<a class="headerlink" href="#module-micromind.utils.yolo" title="Link to this heading"></a></h2>
+<p>Helper functions.</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Matteo Beltrami, 2023</p></li>
+<li><p>Francesco Paissan, 2023</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py function">
-<dt class="sig sig-object py" id="micromind.utils.parse.parse_arguments">
-<span class="sig-prename descclassname"><span class="pre">micromind.utils.parse.</span></span><span class="sig-name descname"><span class="pre">parse_arguments</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/parse.html#parse_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.parse.parse_arguments" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="micromind.utils.yolo.autopad">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">autopad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#autopad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.autopad" title="Link to this definition"></a></dt>
+<dd><p>Calculate padding value for a convolution operation based on kernel
+size and dilation.</p>
+<p>This function computes the padding value for a convolution operation to
+maintain the spatial size of the input tensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>int</em>) – Kernel size for the convolution operation. If a single integer
+is provided, it’s assumed that all dimensions have the same kernel size.</p></li>
+<li><p><strong>p</strong> (<em>int</em><em>, </em><em>optional</em>) – Padding value for the convolution operation. If not provided,
+it will be calculated to maintain the spatial size of the input tensor.</p></li>
+<li><p><strong>d</strong> (<em>int</em><em>, </em><em>optional</em>) – Dilation for the convolution operation. Default is 1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>The padding value to maintain the spatial size of the input tensor</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.average_precision">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">average_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ground_truth</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#average_precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.average_precision" title="Link to this definition"></a></dt>
+<dd><p>Calculate the average precision (AP) for a specific class in YOLO predictions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions</strong> (<em>list</em>) – List of prediction boxes in the format [x1, y1, x2, y2, confidence, class_id].</p></li>
+<li><p><strong>ground_truth</strong> (<em>list</em>) – List of ground truth boxes in the same format.</p></li>
+<li><p><strong>class_id</strong> (<em>int</em>) – The class ID for which to calculate AP.</p></li>
+<li><p><strong>iou_threshold</strong> (<em>float</em>) – The IoU threshold for considering a prediction as correct.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The average precision for the specified class.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.bbox_format">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">bbox_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#bbox_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.bbox_format" title="Link to this definition"></a></dt>
+<dd><p>Convert a tensor of coordinates [x1, y1, x2, y2] representing two points
+defining a rectangle to the format [x_min, y_min, x_max, y_max], where
+x_min, y_min represent the top-left corner, and x_max, y_max represent the
+bottom-right corner of the rectangle.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>box</strong> (<em>torch.Tensor</em>) – A tensor of coordinates in the format [x1, y1, x2, y2] where x1, y1, x2, y2
+represent the coordinates of two points defining a rectangle.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The coordinates in the format [x_min, y_min, x_max, y_max] where x_min, y_min
+represent the top-left vertex, and x_max, y_max represent the bottom-right
+vertex of the rectangle.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.box_area">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">box_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#box_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.box_area" title="Link to this definition"></a></dt>
+<dd><p>Calculate the area of bounding boxes.</p>
+<p>This function calculates the area of bounding boxes
+represented as [x1, y1, x2, y2].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>box</strong> (<em>torch.Tensor</em>) – A tensor containing bounding boxes in the format [x1, y1, x2, y2].</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>A tensor containing the area of each bounding box</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.box_iou">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">box_iou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#box_iou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.box_iou" title="Link to this definition"></a></dt>
+<dd><p>Calculate the Intersection over Union (IoU) between two sets
+of bounding boxes.</p>
+<p>This function computes the IoU between two sets of bounding boxes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>box1</strong> (<em>numpy.ndarray</em>) – The first set of bounding boxes in the format [x1, y1, x2, y2].</p></li>
+<li><p><strong>box2</strong> (<em>numpy.ndarray</em>) – The second set of bounding boxes in the format [x1, y1, x2, y2].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A 2D numpy array containing the IoU between each pair of bounding
+boxes in box1 and box2.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.calculate_iou">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">calculate_iou</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">box1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">box2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#calculate_iou"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.calculate_iou" title="Link to this definition"></a></dt>
+<dd><p>Calculate the Intersection over Union (IoU) between two bounding boxes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>box1</strong> (<em>torch.Tensor</em>) – First bounding box in the format [x1, y1, x2, y2].</p></li>
+<li><p><strong>box2</strong> (<em>torch.Tensor</em>) – Second bounding box in the format [x1, y1, x2, y2].</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The intersection over union of the two bounding boxes.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.clip_boxes">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">clip_boxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#clip_boxes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.clip_boxes" title="Link to this definition"></a></dt>
+<dd><p>Clip bounding boxes to stay within image boundaries.</p>
+<p>This function clips bounding boxes to ensure that they stay within the
+boundaries of the image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>boxes</strong> (<em>torch.Tensor</em>) – A tensor containing bounding boxes in the format [x1, y1, x2, y2].</p></li>
+<li><p><strong>shape</strong> (<em>tuple</em>) – A tuple representing the shape of the image in the format (height, width).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>A tensor containing the clipped bounding boxes</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.compute_transform">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">compute_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(640,</span> <span class="pre">640)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaleFill</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scaleup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#compute_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.compute_transform" title="Link to this definition"></a></dt>
+<dd><p>Compute a transformation of an image to the specified size and format.</p>
+<p>This function computes a transformation of the input image to the specified
+new size and format, while optionally maintaining the aspect ratio or adding
+padding as needed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<em>torch.Tensor</em>) – The input image to be transformed.</p></li>
+<li><p><strong>new_shape</strong> (<em>int</em><em> or </em><em>tuple</em><em>, </em><em>optional</em>) – The target size of the transformed image. If an integer is provided,
+the image is resized to have the same width and height.
+If a tuple of two integers is provided, it represents the new width
+and height. Default is (640, 640).</p></li>
+<li><p><strong>auto</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, automatically calculates padding to ensure the output size
+is divisible by the specified <cite>stride</cite>. Default is False.</p></li>
+<li><p><strong>scaleFill</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, scales the image to completely fill the target size without
+maintaining the aspect ratio. Default is False.</p></li>
+<li><p><strong>scaleup</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, allows the image to be scaled up (enlarged) if necessary.
+Default is True.</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – The stride value used for padding calculation when <cite>auto</cite> is True.
+Default is 32.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>The transformed image</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.dist2bbox">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">dist2bbox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">distance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anchor_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">xywh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dim</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#dist2bbox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.dist2bbox" title="Link to this definition"></a></dt>
+<dd><p>Convert distance predictions to bounding box coordinates.</p>
+<p>This function takes distance predictions and anchor points to calculate
+bounding box coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>distance</strong> (<em>torch.Tensor</em>) – Tensor containing distance predictions.
+It should be in the format [lt, rb] if <cite>xywh</cite> is True,
+or [x1y1, x2y2] if <cite>xywh</cite> is False.</p></li>
+<li><p><strong>anchor_points</strong> (<em>torch.Tensor</em>) – Tensor containing anchor points used for the conversion.</p></li>
+<li><p><strong>xywh</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the function returns bounding boxes in the format
+[center_x, center_y, width, height].
+If False, it returns bounding boxes in the format [x1, y1, x2, y2].
+Default is True.</p></li>
+<li><p><strong>dim</strong> (<em>int</em><em>, </em><em>optional</em>) – The dimension along which the tensor is split into lt and rb.
+Default is -1.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Converted bounding box coordinates in the specified format</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensors</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.draw_bounding_boxes_and_save">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">draw_bounding_boxes_and_save</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">orig_img_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_img_paths</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all_predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">class_labels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#draw_bounding_boxes_and_save"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.draw_bounding_boxes_and_save" title="Link to this definition"></a></dt>
+<dd><p>Draw bounding boxes on images based on object detection predictions and
+save the result.</p>
+<p>This function draws bounding boxes on images based on object detection
+predictions and saves the result. It also prints the number of objects
+detected for each class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>orig_img_paths</strong> (<em>list</em><em> of </em><em>str</em>) – A list of file paths to the original input images.</p></li>
+<li><p><strong>output_img_paths</strong> (<em>list</em><em> of </em><em>str</em>) – A list of file paths to save the images with bounding boxes.</p></li>
+<li><p><strong>all_predictions</strong> (<em>list</em><em> of </em><em>list</em><em> of </em><em>numpy.ndarray</em>) – A list of lists of prediction arrays from the object detection model.</p></li>
+<li><p><strong>class_labels</strong> (<em>list</em><em> of </em><em>str</em>) – A list of class labels corresponding to the object classes.</p></li>
+<li><p><strong>iou_threshold</strong> (<em>float</em><em>, </em><em>optional</em>) – The IoU threshold used for non-maximum suppression to remove
+overlapping bounding boxes. Default is 0.5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.get_variant_multiples">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">get_variant_multiples</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">variant</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#get_variant_multiples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.get_variant_multiples" title="Link to this definition"></a></dt>
 <dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.load_config">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#load_config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.load_config" title="Link to this definition"></a></dt>
+<dd><p>Load configuration from a YAML file and preprocess it for training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>str</em>) – Path to the YAML configuration file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>m_cfg</strong> (<em>types.SimpleNamespace</em>) – Model configuration containing task-specific parameters.</p></li>
+<li><p><strong>data_cfg</strong> (<em>dict</em>) – Data configuration containing paths and settings for train, val and test.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.make_anchors">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">make_anchors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strides</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_cell_offset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#make_anchors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.make_anchors" title="Link to this definition"></a></dt>
+<dd><p>Generate anchor points and stride tensors.</p>
+<p>This function generates anchor points for each feature map and stride
+combination.
+It is commonly used in object detection tasks to define anchor boxes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feats</strong> (<em>torch.Tensor</em>) – A feature map (tensor) from which anchor points will be generated.</p></li>
+<li><p><strong>strides</strong> (<em>torch.Tensor</em>) – Stride values corresponding to each feature map.
+Strides define the spacing between anchor points.</p></li>
+<li><p><strong>grid_cell_offset</strong> (<em>float</em><em>, </em><em>optional</em>) – Offset to be added to the grid cell coordinates when
+generating anchor points. Default is 0.5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>anchor_points</strong> (<em>torch.Tensor</em>) – Concatenated anchor points for all feature maps as a 2D tensor.</p></li>
+<li><p><strong>stride_tensor</strong> (<em>torch.Tensor</em>) – Concatenated stride values for all anchor points as a 2D tensor.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.mean_average_precision">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">mean_average_precision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">post_predictions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_bboxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_threshold</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#mean_average_precision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.mean_average_precision" title="Link to this definition"></a></dt>
+<dd><p>Calculate the mean average precision (mAP) for all classes in YOLO predictions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>post_predictions</strong> (<em>list</em>) – List of post-processed predictions for bounding boxes.</p></li>
+<li><p><strong>batch</strong> (<em>dict</em>) – A dictionary containing batch information, including image files, batch indices.</p></li>
+<li><p><strong>batch_bboxes</strong> (<em>torch.Tensor</em>) – Tensor containing batch bounding boxes.</p></li>
+<li><p><strong>iou_threshold</strong> (<em>float</em>) – The IoU threshold for considering a prediction as correct.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mean average precision (mAP).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.non_max_suppression">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">non_max_suppression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">prediction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf_thres</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.25</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iou_thres</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">agnostic</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">multi_label</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_det</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_time_img</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_nms</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_wh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7680</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#non_max_suppression"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.non_max_suppression" title="Link to this definition"></a></dt>
+<dd><p>Perform non-maximum suppression (NMS) on a set of boxes, with support for masks
+and multiple labels per box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>prediction</strong> (<em>torch.Tensor</em>) – A tensor of shape (batch_size, num_classes + 4 + num_masks, num_boxes)
+containing the predicted boxes, classes, and masks. The tensor should
+be in the format output by a model, such as YOLO.</p></li>
+<li><p><strong>conf_thres</strong> (<em>float</em><em>, </em><em>optional</em>) – The confidence threshold below which boxes will be filtered out.
+Valid values are between 0.0 and 1.0. Default is 0.25.</p></li>
+<li><p><strong>iou_thres</strong> (<em>float</em><em>, </em><em>optional</em>) – The IoU threshold below which boxes will be filtered out during NMS.
+Valid values are between 0.0 and 1.0. Default is 0.45.</p></li>
+<li><p><strong>classes</strong> (<em>List</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – A list of class indices to consider. If None, all classes will be considered.</p></li>
+<li><p><strong>agnostic</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the model is agnostic to the number of classes, and all classes
+will be considered as one. Default is False.</p></li>
+<li><p><strong>multi_label</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, each box may have multiple labels. Default is False.</p></li>
+<li><p><strong>labels</strong> (<em>List</em><em>[</em><em>List</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>float</em><em>, </em><em>torch.Tensor</em><em>]</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – A list of lists, where each inner list contains the apriori labels for a
+given image. The list should be in the format output by a dataloader, with
+each label being a tuple of (class_index, x1, y1, x2, y2).</p></li>
+<li><p><strong>max_det</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of boxes to keep after NMS. Default is 300.</p></li>
+<li><p><strong>nc</strong> (<em>int</em><em>, </em><em>optional</em>) – The number of classes output by the model. Any indices after this will be
+considered masks. Default is 0.</p></li>
+<li><p><strong>max_time_img</strong> (<em>float</em><em>, </em><em>optional</em>) – The maximum time (seconds) for processing one image. Default is 0.05.</p></li>
+<li><p><strong>max_nms</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum number of boxes into torchvision.ops.nms(). Default is 30000.</p></li>
+<li><p><strong>max_wh</strong> (<em>int</em><em>, </em><em>optional</em>) – The maximum box width and height in pixels. Default is 7680.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of length batch_size, where each element is a tensor of
+shape (num_boxes, 6 + num_masks) containing the kept boxes, with columns
+(x1, y1, x2, y2, confidence, class, mask1, mask2, …).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List[torch.Tensor]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.postprocess">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">postprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">preds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orig_imgs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#postprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.postprocess" title="Link to this definition"></a></dt>
+<dd><p>Perform post-processing on the predictions.</p>
+<p>This function applies post-processing to the predictions,
+including Non-Maximum Suppression (NMS) and scaling of bounding boxes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preds</strong> (<em>list</em><em> of </em><em>numpy.ndarray</em>) – A list of prediction arrays from the object detection model.</p></li>
+<li><p><strong>img</strong> (<em>numpy.ndarray</em>) – The input image on which the predictions were made.</p></li>
+<li><p><strong>orig_imgs</strong> (<em>numpy.ndarray</em><em> or </em><em>list</em><em> of </em><em>numpy.ndarray</em>) – The original image(s) before any preprocessing.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of post-processed prediction arrays, each containing bounding
+boxes and associated information.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list of numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.preprocess">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">im</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">imgsz</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">640</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">32</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_pt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.preprocess" title="Link to this definition"></a></dt>
+<dd><p>Preprocess a batch of images for inference.</p>
+<p>This function preprocesses a batch of images for inference by
+resizing, transforming, and normalizing them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>im</strong> (<em>torch.Tensor</em><em> or </em><em>list</em><em> of </em><em>torch.Tensor</em>) – An input image or a batch of images to be preprocessed.</p></li>
+<li><p><strong>imgsz</strong> (<em>int</em><em>, </em><em>optional</em>) – The target size of the images after preprocessing.
+Default is 640.</p></li>
+<li><p><strong>model_stride</strong> (<em>int</em><em>, </em><em>optional</em>) – The stride value used for padding calculation when <cite>auto</cite> is True
+in <cite>compute_transform</cite>. Default is 32.</p></li>
+<li><p><strong>model_pt</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, the function automatically calculates the padding to
+maintain the same shapes for all input images in the batch.
+Default is True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The preprocessed batch of images as a torch.Tensor with shape
+(n, 3, h, w), where n is the number of images, 3 represents the
+RGB channels, and h and w are the height and width of the images.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.scale_boxes">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">scale_boxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img1_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">img0_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ratio_pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#scale_boxes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.scale_boxes" title="Link to this definition"></a></dt>
+<dd><p>Scale bounding boxes to match a different image shape.</p>
+<p>This function scales bounding boxes to match a different image
+shape while maintaining their aspect ratio.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>img1_shape</strong> (<em>tuple</em>) – A tuple representing the shape of the target image in the
+format (height, width).</p></li>
+<li><p><strong>boxes</strong> (<em>torch.Tensor</em>) – A tensor containing bounding boxes in the
+format [x1, y1, x2, y2].</p></li>
+<li><p><strong>img0_shape</strong> (<em>tuple</em>) – A tuple representing the shape of the source image in the
+format (height, width).</p></li>
+<li><p><strong>ratio_pad</strong> (<em>float</em><em> or </em><em>None</em><em>, </em><em>optional</em>) – A scaling factor for the bounding boxes.
+If None, it is calculated based on the aspect ratio of the images.
+Default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>A tensor containing the scaled bounding boxes</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.utils.yolo.xywh2xyxy">
+<span class="sig-prename descclassname"><span class="pre">micromind.utils.yolo.</span></span><span class="sig-name descname"><span class="pre">xywh2xyxy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/utils/yolo.html#xywh2xyxy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.utils.yolo.xywh2xyxy" title="Link to this definition"></a></dt>
+<dd><p>Convert bounding box coordinates from (x, y, width, height)
+to (x1, y1, x2, y2) format.</p>
+<p>This function converts bounding box coordinates from the format
+(center_x, center_y, width, height) to the format (x1, y1, x2, y2),
+where (x1, y1) represents the top-left corner and (x2, y2) represents
+the bottom-right corner of the bounding box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – A tensor containing bounding box coordinates in the
+format (center_x, center_y, width, height).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tensor containing bounding box coordinates in the
+format (x1, y1, x2, y2).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 </section>

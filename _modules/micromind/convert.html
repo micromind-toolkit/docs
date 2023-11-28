@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>micromind.convert &mdash; micromind 0.0.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -81,25 +83,47 @@
 <span class="sd">    - Francesco Paissan, 2023</span>
 <span class="sd">    - Alberto Ancilotto, 2023</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
-<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
-<span class="kn">import</span> <span class="nn">torch</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+
+<span class="kn">from</span> <span class="nn">.utils.helpers</span> <span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">import</span> <span class="nn">micromind</span> <span class="k">as</span> <span class="nn">mm</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
 
 
 <div class="viewcode-block" id="convert_to_onnx">
 <a class="viewcode-back" href="../../micromind.html#micromind.convert.convert_to_onnx">[docs]</a>
 <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">convert_to_onnx</span><span class="p">(</span>
-    <span class="n">net</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
+    <span class="n">net</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">mm</span><span class="o">.</span><span class="n">MicroMind</span><span class="p">],</span>
     <span class="n">save_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;model.onnx&quot;</span><span class="p">,</span>
     <span class="n">simplify</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
     <span class="n">replace_forward</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts nn.Module to onnx and saves it to save_path.</span>
-<span class="sd">    Optionally simplifies it.&quot;&quot;&quot;</span>
+<span class="sd">    Optionally simplifies it. This function is internally used from `mm.MicroMind`.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    net : Union[nn.Module, mm.MicroMind]</span>
+<span class="sd">        PyTorch module to be exported.</span>
+<span class="sd">    save_path : Union[Path, str]</span>
+<span class="sd">        Output path for the ONNX model.</span>
+<span class="sd">    simplify : bool</span>
+<span class="sd">        `True` if you want to simplify the model. Defaults to False.</span>
+<span class="sd">    replace_forward : bool</span>
+<span class="sd">        Used if you want to replace the forward method. It is need if you are calling</span>
+<span class="sd">        this function on a `mm.MicroMind`. Defaults to False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    The path of the ONNX model. : Path</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">save_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">save_path</span><span class="p">)</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">save_path</span><span class="o">.</span><span class="n">parent</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">net</span><span class="o">.</span><span class="n">input_shape</span><span class="p">))</span>
@@ -141,18 +165,35 @@
 <a class="viewcode-back" href="../../micromind.html#micromind.convert.convert_to_openvino">[docs]</a>
 <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">convert_to_openvino</span><span class="p">(</span>
-    <span class="n">net</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">save_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">replace_forward</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">net</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">mm</span><span class="o">.</span><span class="n">MicroMind</span><span class="p">],</span> <span class="n">save_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">replace_forward</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts nn.Module to OpenVINO.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts model to OpenVINO. Uses ONNX in the process and converts networks</span>
+<span class="sd">    from channel-first to channel-last (for optimized inference).</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    net : nn.Module</span>
+<span class="sd">        PyTorch module to be exported.</span>
+<span class="sd">    save_path : Union[Path, str]</span>
+<span class="sd">        Output path for the OpenVINO model.</span>
+<span class="sd">    replace_forward : bool</span>
+<span class="sd">        Used if you want to replace the forward method. It is need if you are calling</span>
+<span class="sd">        this function on a `mm.MicroMind`. Defaults to False.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    The path of the XML model. : str</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">os</span>
 
         <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;TF_CPP_MIN_LOG_LEVEL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;3&quot;</span>
         <span class="kn">import</span> <span class="nn">sys</span>
         <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-        <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
         <span class="kn">import</span> <span class="nn">onnx</span>
+        <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
         <span class="kn">from</span> <span class="nn">onnx_tf.backend</span> <span class="kn">import</span> <span class="n">prepare</span>
         <span class="kn">from</span> <span class="nn">openvino.tools.mo</span> <span class="kn">import</span> <span class="n">main</span> <span class="k">as</span> <span class="n">mo_main</span>
 
@@ -204,12 +245,27 @@
 <a class="viewcode-back" href="../../micromind.html#micromind.convert.convert_to_tflite">[docs]</a>
 <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">convert_to_tflite</span><span class="p">(</span>
-    <span class="n">net</span><span class="p">:</span> <span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span>
-    <span class="n">save_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span>
+    <span class="n">net</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">mm</span><span class="o">.</span><span class="n">MicroMind</span><span class="p">],</span>
+    <span class="n">save_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">batch_quant</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">replace_forward</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts nn.Module to tf_lite, optionally quantizes it.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Converts nn.Module to tf_lite, optionally quantizes it.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    net : nn.Module</span>
+<span class="sd">        PyTorch module to be exported.</span>
+<span class="sd">    save_path : Union[Path, str]</span>
+<span class="sd">        Output path for the OpenVINO model.</span>
+<span class="sd">    batch_quant : torch.Tensor</span>
+<span class="sd">        Optional batch for quantization. When passed, it is used to create the</span>
+<span class="sd">        statistics of the quantized activations.</span>
+<span class="sd">    replace_forward : bool</span>
+<span class="sd">        Used if you want to replace the forward method. It is need if you are calling</span>
+<span class="sd">        this function on a `mm.MicroMind`. Defaults to False.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="kn">import</span> <span class="nn">os</span>
 
@@ -217,10 +273,10 @@
         <span class="kn">import</span> <span class="nn">shutil</span>
         <span class="kn">import</span> <span class="nn">sys</span>
         <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
-        <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
         <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
         <span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+        <span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
 
     <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>

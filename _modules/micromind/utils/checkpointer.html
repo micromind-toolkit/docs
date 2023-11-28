@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../../">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>micromind.utils.checkpointer &mdash; micromind 0.0.1 documentation</title>
-      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -80,103 +82,282 @@
 <span class="sd">Authors:</span>
 <span class="sd">    - Francesco Paissan, 2023</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Callable</span>
-<span class="kn">from</span> <span class="nn">loguru</span> <span class="kn">import</span> <span class="n">logger</span>
-<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">Namespace</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 
 <span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
+
+<span class="kn">from</span> <span class="nn">.helpers</span> <span class="kn">import</span> <span class="n">get_logger</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="create_experiment_folder">
+<a class="viewcode-back" href="../../../micromind.utils.html#micromind.utils.checkpointer.create_experiment_folder">[docs]</a>
+<span class="k">def</span> <span class="nf">create_experiment_folder</span><span class="p">(</span>
+    <span class="n">output_folder</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">exp_name</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Creates the experiment folder used to log data.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    output_folder : Union[Path, str]</span>
+<span class="sd">        General output folder (can be shared between more experiments).</span>
+<span class="sd">    exp_name  : Union[Path, str]</span>
+<span class="sd">        Name of the experiment, to be concatenated to the output_folder.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    Experiment folder : Union[Path, str]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">exp_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_folder</span><span class="p">,</span> <span class="n">exp_name</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">exp_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">exp_folder</span><span class="p">,</span> <span class="s2">&quot;save&quot;</span><span class="p">),</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">exp_folder</span></div>
+
 
 
 <div class="viewcode-block" id="Checkpointer">
 <a class="viewcode-back" href="../../../micromind.utils.html#micromind.utils.checkpointer.Checkpointer">[docs]</a>
 <span class="k">class</span> <span class="nc">Checkpointer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Checkpointer class. Supports min/max modes for arbitrary keys (Metrics or loss).</span>
+<span class="sd">    Always saves best and last in the experiment folder.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+
+<span class="sd">    experiment_folder : Union[str, Path]</span>
+<span class="sd">        Experiment folder. Used to load / store checkpoints.</span>
+<span class="sd">    key: Optional[str]</span>
+<span class="sd">        Key to be logged. It should be the name of the Metric, or &quot;loss&quot;.</span>
+<span class="sd">        Defaults to &quot;loss&quot;.</span>
+<span class="sd">    mode: Optional[str]</span>
+<span class="sd">        Either `min` or `max`. If min, will store the checkpoint with the lowest</span>
+<span class="sd">        value for key. If max, it does the opposite.</span>
+
+<span class="sd">    Example</span>
+<span class="sd">    -------</span>
+<span class="sd">    .. doctest::</span>
+
+<span class="sd">        &gt;&gt;&gt; from micromind.utils.checkpointer import Checkpointer</span>
+<span class="sd">        &gt;&gt;&gt; from micromind.utils.checkpointer import create_experiment_folder</span>
+<span class="sd">        &gt;&gt;&gt; exp_folder = create_experiment_folder(&quot;/tmp&quot;, &quot;test_mm&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; check = Checkpointer(exp_folder)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span>
-        <span class="n">top_k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
-        <span class="n">checkpoint_path</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+        <span class="n">experiment_folder</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Path</span><span class="p">],</span>
+        <span class="n">key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;loss&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span>
+        <span class="n">hparams</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Namespace</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="n">experiment_folder</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;You should pass a valid experiment folder.&quot;</span>
+        <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">experiment_folder</span><span class="p">,</span> <span class="s2">&quot;save&quot;</span><span class="p">)</span>
+        <span class="p">),</span> <span class="s2">&quot;Invalid experiment folder.&quot;</span>
         <span class="k">assert</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">],</span> <span class="s2">&quot;Checkpointer mode can be only max or min.&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;val_&quot;</span> <span class="o">+</span> <span class="n">key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">top_k</span> <span class="o">=</span> <span class="mi">5</span>
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">bests</span> <span class="o">=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">inf</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_k</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">top_k</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="n">checkpoint_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bests</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span> <span class="k">else</span> <span class="o">-</span><span class="n">torch</span><span class="o">.</span><span class="n">inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span> <span class="o">=</span> <span class="n">experiment_folder</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">,</span> <span class="s2">&quot;save&quot;</span><span class="p">)</span>
-        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fstream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">,</span> <span class="s2">&quot;train_log.txt&quot;</span><span class="p">),</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_dir</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span>
+
+        <span class="c1"># dump hparams to yaml when passed</span>
+        <span class="k">if</span> <span class="n">hparams</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">):</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">,</span> <span class="s2">&quot;args.yaml&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">args_f</span><span class="p">:</span>
+                <span class="n">args_f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_dump</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">hparams</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+                <span class="s2">&quot;You did not specify the configuration to the checkpointer, </span><span class="se">\</span>
+<span class="s2">                so it won&#39;t be saved. You can pass one using the hparams </span><span class="se">\</span>
+<span class="s2">                argument. Ignore this if you are in debug mode.&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># if true, does not write on disk</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="Checkpointer.recover_state">
+<a class="viewcode-back" href="../../../micromind.utils.html#micromind.utils.checkpointer.Checkpointer.recover_state">[docs]</a>
+    <span class="k">def</span> <span class="nf">recover_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Recovers last corrected state of the training. If found, returns</span>
+<span class="sd">        the accelerate dump folder (for recovery) and the last epoch logged.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Checkpoint path and last epoch logged. : Tuple[str, int]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">available_ckpts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="p">)</span><span class="o">.</span><span class="n">iterdir</span><span class="p">())</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">available_ckpts</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">dates</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ckpt</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">+%H-%M-%S&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ckpt</span> <span class="ow">in</span> <span class="n">available_ckpts</span>
+        <span class="p">]</span>
+        <span class="n">dates</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">dates</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">:</span>
+            <span class="n">oldest_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">+%H-%M-%S&quot;</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">oldest_name</span><span class="p">,</span> <span class="s2">&quot;status.yaml&quot;</span><span class="p">))</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">oldest_name</span><span class="p">,</span> <span class="s2">&quot;status.yaml&quot;</span><span class="p">),</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">dat</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+
+                <span class="n">epoch</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;epoch&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bests</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;metric&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">key</span> <span class="o">=</span> <span class="n">dat</span><span class="p">[</span><span class="s2">&quot;metric_key&quot;</span><span class="p">]</span>
+
+                <span class="n">accelerate_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">oldest_name</span><span class="p">,</span> <span class="s2">&quot;accelerate_dump&quot;</span><span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Recovered info from checkpoint </span><span class="si">{</span><span class="n">oldest_name</span><span class="si">}</span><span class="s2"> at epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">.&quot;</span>
+                <span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2"> was </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> for this checkpoint.&quot;</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="n">accelerate_path</span><span class="p">,</span> <span class="n">epoch</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;Tried to recover checkpoint </span><span class="si">{</span><span class="n">oldest_name</span><span class="si">}</span><span class="s2">, </span><span class="se">\</span>
+<span class="s2">                    but it appears corrupted.&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span></div>
+
+
+<div class="viewcode-block" id="Checkpointer.dump_modules">
+<a class="viewcode-back" href="../../../micromind.utils.html#micromind.utils.checkpointer.Checkpointer.dump_modules">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">dump_modules</span><span class="p">(</span><span class="n">modules</span><span class="p">,</span> <span class="n">out_folder</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dumps state dict for all elements in the modules.&quot;&quot;&quot;</span>
+        <span class="n">base_save</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">base_save</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_folder</span><span class="p">,</span> <span class="s2">&quot;state-dict.pth.tar&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Checkpointer.dump_status">
+<a class="viewcode-back" href="../../../micromind.utils.html#micromind.utils.checkpointer.Checkpointer.dump_status">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">dump_status</span><span class="p">(</span><span class="n">status</span><span class="p">,</span> <span class="n">out_dir</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dumps the status of the training.&quot;&quot;&quot;</span>
+        <span class="n">yaml_status</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s2">&quot;status.yaml&quot;</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">yaml_status</span><span class="p">)</span></div>
+
 
     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">mind</span><span class="p">,</span>
-        <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">train_metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
         <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span>
-        <span class="n">unwrap</span><span class="p">:</span> <span class="n">Callable</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Path</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Does one checkpointing step.</span>
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        mind : mm.Micromind</span>
+<span class="sd">            Mind to be saved, eventually.</span>
+<span class="sd">        train_metrics : Dict</span>
+<span class="sd">            Training metrics, used only for the `train_log.txt` and the `stdout`.</span>
+<span class="sd">        metrics : Dict</span>
+<span class="sd">            Validation metrics, used to check if the checkpoint improved.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Current best checkpoint : Union[str, Path]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_folder</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">+%H-%M-%S&quot;</span><span class="p">)</span>
+        <span class="n">current_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="p">,</span> <span class="n">current_folder</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">current_folder</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">status_dict</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">mind</span><span class="o">.</span><span class="n">current_epoch</span><span class="p">,</span>
+            <span class="s2">&quot;metric&quot;</span><span class="p">:</span> <span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">],</span>
+            <span class="s2">&quot;metric_key&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fstream</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root_dir</span><span class="p">,</span> <span class="s2">&quot;train_log.txt&quot;</span><span class="p">),</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
         <span class="n">s_out</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Epoch </span><span class="si">{</span><span class="n">mind</span><span class="o">.</span><span class="n">current_epoch</span><span class="si">}</span><span class="s2">: &quot;</span>
             <span class="o">+</span> <span class="s2">&quot; - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">train_metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
             <span class="o">+</span> <span class="s2">&quot;; &quot;</span>
         <span class="p">)</span>
         <span class="n">s_out</span> <span class="o">+=</span> <span class="s2">&quot; - &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k2</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v2</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k2</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span> <span class="o">+</span> <span class="s2">&quot;.</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fstream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s_out</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fstream</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s_out</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">s_out</span><span class="p">)</span>
-        <span class="n">base_save</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">,</span>
-            <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
-            <span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">epoch</span><span class="p">,</span>
-            <span class="s2">&quot;optimizer&quot;</span><span class="p">:</span> <span class="n">mind</span><span class="o">.</span><span class="n">opt</span><span class="p">,</span>
-            <span class="s2">&quot;lr_scheduler&quot;</span><span class="p">:</span> <span class="n">mind</span><span class="o">.</span><span class="n">lr_sched</span><span class="p">,</span>
-        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="n">mind</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">save_state</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_folder</span><span class="p">,</span> <span class="s2">&quot;accelerate_dump&quot;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dump_modules</span><span class="p">(</span><span class="n">mind</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="n">current_folder</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dump_status</span><span class="p">(</span><span class="n">status_dict</span><span class="p">,</span> <span class="n">current_folder</span><span class="p">)</span>
+
+        <span class="c1"># remove previous last dir after saving the current version</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_dir</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_dir</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span>
+            <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span>
+        <span class="p">):</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">last_dir</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">last_dir</span> <span class="o">=</span> <span class="n">current_folder</span>
+
         <span class="n">to_remove</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="p">):</span>
-                <span class="n">id_best</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="p">))</span>
-                <span class="n">to_remove</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span><span class="p">[</span><span class="n">id_best</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="p">:</span>
+                <span class="n">to_remove</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span><span class="p">[</span><span class="n">id_best</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s2">&quot;epoch_</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">.ckpt&quot;</span><span class="p">,</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+                    <span class="n">mind</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">save_state</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_folder</span><span class="p">,</span> <span class="s2">&quot;accelerate_dump&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dump_modules</span><span class="p">(</span><span class="n">mind</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="n">current_folder</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dump_status</span><span class="p">(</span><span class="n">status_dict</span><span class="p">,</span> <span class="n">current_folder</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bests</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span> <span class="o">=</span> <span class="n">current_folder</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Generated better checkpoint at epoch </span><span class="si">{</span><span class="n">mind</span><span class="o">.</span><span class="n">current_epoch</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
 
-                <span class="n">base_save</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                    <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">unwrap</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mind</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-                <span class="p">),</span>
-                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">base_save</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span><span class="p">[</span><span class="n">id_best</span><span class="p">])</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="p">):</span>
-                <span class="n">id_best</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="p">))</span>
-                <span class="n">to_remove</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span><span class="p">[</span><span class="n">id_best</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="p">:</span>
+                <span class="n">to_remove</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span>
 
-                <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span><span class="p">[</span><span class="n">id_best</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">save_dir</span><span class="p">,</span>
-                    <span class="sa">f</span><span class="s2">&quot;epoch_</span><span class="si">{</span><span class="n">epoch</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">.ckpt&quot;</span><span class="p">,</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+                    <span class="n">mind</span><span class="o">.</span><span class="n">accelerator</span><span class="o">.</span><span class="n">save_state</span><span class="p">(</span>
+                        <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_folder</span><span class="p">,</span> <span class="s2">&quot;accelerate_dump&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dump_modules</span><span class="p">(</span><span class="n">mind</span><span class="o">.</span><span class="n">modules</span><span class="p">,</span> <span class="n">current_folder</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">dump_status</span><span class="p">(</span><span class="n">status_dict</span><span class="p">,</span> <span class="n">current_folder</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bests</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">key</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span> <span class="o">=</span> <span class="n">current_folder</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;Generated better checkpoint at epoch </span><span class="si">{</span><span class="n">mind</span><span class="o">.</span><span class="n">current_epoch</span><span class="si">}</span><span class="s2">.&quot;</span>
                 <span class="p">)</span>
 
-                <span class="n">base_save</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
-                    <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">unwrap</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mind</span><span class="o">.</span><span class="n">modules</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-                <span class="p">),</span>
-                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">base_save</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span><span class="p">[</span><span class="n">id_best</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">to_remove</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">to_remove</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Deleting </span><span class="si">{</span><span class="n">to_remove</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">to_remove</span><span class="p">):</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">to_remove</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">to_remove</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">to_remove</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated better checkpoint. Deleting </span><span class="si">{</span><span class="n">to_remove</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">to_remove</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fstream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="p">))]</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bests</span><span class="p">))]</span>
-
-<div class="viewcode-block" id="Checkpointer.close">
-<a class="viewcode-back" href="../../../micromind.utils.html#micromind.utils.checkpointer.Checkpointer.close">[docs]</a>
-    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fstream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-</div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_paths</span></div>
 
 </pre></div>
 

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>micromind.networks.yolo &mdash; micromind 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=d45e8c67"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            micromind
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">micromind</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">How To Contribute</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribution.html">Guide for Contributing to micromind</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">micromind</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">micromind.networks.yolo</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for micromind.networks.yolo</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">YOLOv8 building blocks.</span>
+
+<span class="sd">Authors:</span>
+<span class="sd">    - Matteo Beltrami, 2023</span>
+<span class="sd">    - Francesco Paissan, 2023</span>
+
+<span class="sd">This file contains the definition of the building blocks of the yolov8 network.</span>
+<span class="sd">Model architecture has been taken from</span>
+<span class="sd">https://github.com/ultralytics/ultralytics/issues/189</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+
+<span class="kn">from</span> <span class="nn">micromind.utils.yolo</span> <span class="kn">import</span> <span class="n">autopad</span><span class="p">,</span> <span class="n">dist2bbox</span><span class="p">,</span> <span class="n">make_anchors</span>
+
+
+<div class="viewcode-block" id="Upsample">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Upsample">[docs]</a>
+<span class="k">class</span> <span class="nc">Upsample</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale_factor</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;nearest&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span> <span class="o">=</span> <span class="n">scale_factor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">5</span>
+        <span class="p">),</span> <span class="s2">&quot;Input tensor must have 3 to 5 dimensions&quot;</span>
+        <span class="n">upsampled</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">scale_factor</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mode</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">upsampled</span></div>
+
+
+
+<div class="viewcode-block" id="Conv">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Conv">[docs]</a>
+<span class="k">class</span> <span class="nc">Conv</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8&#39;s convolutional block</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    c1 : int</span>
+<span class="sd">        Input channels of the convolutional block.</span>
+<span class="sd">    c2 : int</span>
+<span class="sd">        Output channels of the convolutional block.</span>
+<span class="sd">    kernel_size : int</span>
+<span class="sd">        Kernel size for the convolutional block.</span>
+<span class="sd">    stride : int</span>
+<span class="sd">        Stride for the convolutional block.</span>
+<span class="sd">    padding : int</span>
+<span class="sd">        Padding for the convolutional block.</span>
+<span class="sd">    dilation : int</span>
+<span class="sd">        Dilation for the convolutional block.</span>
+<span class="sd">    groups : int</span>
+<span class="sd">        Groups for the convolutional block.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dilation</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span>
+            <span class="n">c1</span><span class="p">,</span>
+            <span class="n">c2</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernel_size</span><span class="p">,</span>
+            <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="n">autopad</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">,</span> <span class="n">padding</span><span class="p">,</span> <span class="n">dilation</span><span class="p">),</span>
+            <span class="n">dilation</span><span class="o">=</span><span class="n">dilation</span><span class="p">,</span>
+            <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+            <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bn</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">BatchNorm2d</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">silu</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">SiLU</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Conv.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Conv.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 convolutional block.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            Input to the convolutional block.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Ouput of the convolutional block : torch.Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bn</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">silu</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Bottleneck">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Bottleneck">[docs]</a>
+<span class="k">class</span> <span class="nc">Bottleneck</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8&#39;s bottleneck block.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    c1 : int</span>
+<span class="sd">        Input channels of the bottleneck block.</span>
+<span class="sd">    c2 : int</span>
+<span class="sd">        Output channels of the bottleneck block.</span>
+<span class="sd">    shortcut : bool</span>
+<span class="sd">        Decides whether to perform a shortcut in the bottleneck block.</span>
+<span class="sd">    groups : int</span>
+<span class="sd">        Groups for the bottleneck block.</span>
+<span class="sd">    kernels : list</span>
+<span class="sd">        Kernel size for the bottleneck block.</span>
+<span class="sd">    channel_factor : float</span>
+<span class="sd">        Decides the number of channels of the intermediate result</span>
+<span class="sd">        between the two convolutional blocks.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">c1</span><span class="p">,</span>
+        <span class="n">c2</span><span class="p">,</span>
+        <span class="n">shortcut</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+        <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">kernels</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+        <span class="n">channel_factor</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">c_</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">c2</span> <span class="o">*</span> <span class="n">channel_factor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv1</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c_</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernels</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span>
+            <span class="n">c_</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="n">kernels</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">residual</span> <span class="o">=</span> <span class="n">c1</span> <span class="o">==</span> <span class="n">c2</span> <span class="ow">and</span> <span class="n">shortcut</span>
+
+<div class="viewcode-block" id="Bottleneck.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Bottleneck.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 bottleneck block.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            Input to the bottleneck block.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Ouput of the bottleneck block : torch.Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">residual</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cv1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="C2f">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.C2f">[docs]</a>
+<span class="k">class</span> <span class="nc">C2f</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8&#39;s C2f block.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    c1 : int</span>
+<span class="sd">        Input channels of the C2f block.</span>
+<span class="sd">    c2 : int</span>
+<span class="sd">        Output channels of the C2f block.</span>
+<span class="sd">    n : int</span>
+<span class="sd">        Number of bottleck blocks executed in the C2f block.</span>
+<span class="sd">    shortcut : bool</span>
+<span class="sd">        Decides whether to perform a shortcut in the bottleneck blocks.</span>
+<span class="sd">    groups : int</span>
+<span class="sd">        Groups for the C2f block.</span>
+<span class="sd">    e : float</span>
+<span class="sd">        Factor for cancatenating intermeidate results.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shortcut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">e</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">c2</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv1</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span>
+            <span class="n">c1</span><span class="p">,</span>
+            <span class="mi">2</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span>
+            <span class="mi">1</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">((</span><span class="mi">2</span> <span class="o">+</span> <span class="n">n</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bottleneck</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">Bottleneck</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">c</span><span class="p">,</span>
+                    <span class="n">shortcut</span><span class="p">,</span>
+                    <span class="n">groups</span><span class="p">,</span>
+                    <span class="n">kernels</span><span class="o">=</span><span class="p">[(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)],</span>
+                    <span class="n">channel_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="C2f.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.C2f.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 C2f block.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            Input to the C2f block.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Ouput of the C2f block : torch.Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">chunk</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">chunks</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">y</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">m</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bottleneck</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">z</span><span class="p">,</span> <span class="n">i</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span><span class="p">(</span><span class="n">z</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SPPF">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.SPPF">[docs]</a>
+<span class="k">class</span> <span class="nc">SPPF</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8&#39;s SPPF block.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    c1 : int</span>
+<span class="sd">        Input channels of the SPPF block.</span>
+<span class="sd">    c2 : int</span>
+<span class="sd">        Output channels of the SPPF block.</span>
+<span class="sd">    k : int</span>
+<span class="sd">        Kernel size for the SPPF block Maxpooling operations</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">c_</span> <span class="o">=</span> <span class="n">c1</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv1</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="n">c_</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span><span class="n">c_</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">maxpool</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">MaxPool2d</span><span class="p">(</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dilation</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ceil_mode</span><span class="o">=</span><span class="kc">False</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="SPPF.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.SPPF.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 SPPF block.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            Input to the SPPF block.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Ouput of the SPPF block : torch.Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxpool</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxpool</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+        <span class="n">x4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">maxpool</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x4</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span><span class="p">(</span><span class="n">y</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DFL">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.DFL">[docs]</a>
+<span class="k">class</span> <span class="nc">DFL</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8&#39;s DFL block.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    c1 : int</span>
+<span class="sd">        Input channels of the DFL block.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">c1</span><span class="o">=</span><span class="mi">16</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">c1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">c1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">requires_grad</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">weight</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c1</span> <span class="o">=</span> <span class="n">c1</span>
+
+<div class="viewcode-block" id="DFL.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.DFL.forward">[docs]</a>
+    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>  <span class="c1"># TODO: check when training</span>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 DFL block.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            Input to the DFL block.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Ouput of the DFL block : torch.Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">b</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">c1</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conv</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">y</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Darknet">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Darknet">[docs]</a>
+<span class="k">class</span> <span class="nc">Darknet</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8&#39;s convolutional backbone.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    w : float</span>
+<span class="sd">        Width multiple of the Darknet.</span>
+<span class="sd">    r : float</span>
+<span class="sd">        Ratio multiple of the Darknet.</span>
+<span class="sd">    d : float</span>
+<span class="sd">        Depth multiple of the Darknet.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b1</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">Conv</span><span class="p">(</span><span class="n">c1</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">c2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">64</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">Conv</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">64</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">128</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">C2f</span><span class="p">(</span><span class="n">c1</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">128</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="n">c2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mi">128</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span> <span class="n">shortcut</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+            <span class="n">Conv</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">128</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+            <span class="n">C2f</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">Conv</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">C2f</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="mi">6</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b4</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+            <span class="n">Conv</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">r</span><span class="p">),</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+            <span class="n">C2f</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">r</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">r</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">b5</span> <span class="o">=</span> <span class="n">SPPF</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">r</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">r</span><span class="p">),</span> <span class="mi">5</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Darknet.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Darknet.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 convolutional backbone.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            Input to the Darknet.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Three intermediate representations with different resolutions : tuple</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b2</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+        <span class="n">x3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b3</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+        <span class="n">x4</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b4</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span>
+        <span class="n">x5</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">b5</span><span class="p">(</span><span class="n">x4</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="n">x3</span><span class="p">,</span> <span class="n">x5</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Yolov8Neck">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Yolov8Neck">[docs]</a>
+<span class="k">class</span> <span class="nc">Yolov8Neck</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8&#39;s neck.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    w : float</span>
+<span class="sd">        Width multiple of the Darknet.</span>
+<span class="sd">    r : float</span>
+<span class="sd">        Ratio multiple of the Darknet.</span>
+<span class="sd">    d : float</span>
+<span class="sd">        Depth multiple of the Darknet.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">512</span><span class="p">,</span> <span class="mi">768</span><span class="p">],</span> <span class="n">up</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">d</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">up1</span> <span class="o">=</span> <span class="n">Upsample</span><span class="p">(</span><span class="n">up</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">up2</span> <span class="o">=</span> <span class="n">Upsample</span><span class="p">(</span><span class="n">up</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n1</span> <span class="o">=</span> <span class="n">C2f</span><span class="p">(</span>
+            <span class="n">c1</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">filters</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+            <span class="n">c2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="n">n</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span>
+            <span class="n">shortcut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n2</span> <span class="o">=</span> <span class="n">C2f</span><span class="p">(</span>
+            <span class="n">c1</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">filters</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="n">c2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span>
+            <span class="n">n</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span>
+            <span class="n">shortcut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n3</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span>
+            <span class="n">c1</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">c2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n4</span> <span class="o">=</span> <span class="n">C2f</span><span class="p">(</span>
+            <span class="n">c1</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">filters</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="n">c2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="n">n</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span>
+            <span class="n">shortcut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n5</span> <span class="o">=</span> <span class="n">Conv</span><span class="p">(</span>
+            <span class="n">c1</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">c2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n6</span> <span class="o">=</span> <span class="n">C2f</span><span class="p">(</span>
+            <span class="n">c1</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">filters</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+            <span class="n">c2</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">filters</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span>
+            <span class="n">n</span><span class="o">=</span><span class="nb">round</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">d</span><span class="p">),</span>
+            <span class="n">shortcut</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="Yolov8Neck.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.Yolov8Neck.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p3</span><span class="p">,</span> <span class="n">p4</span><span class="p">,</span> <span class="n">p5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 neck.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : tuple</span>
+<span class="sd">            Input to the neck.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Three intermediate representations with different resolutions : list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up1</span><span class="p">(</span><span class="n">p5</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">p4</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n1</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">up2</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">h1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">h1</span><span class="p">,</span> <span class="n">p3</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">head_1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n2</span><span class="p">(</span><span class="n">h1</span><span class="p">)</span>
+        <span class="n">h2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n3</span><span class="p">(</span><span class="n">head_1</span><span class="p">)</span>
+        <span class="n">h2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">h2</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">head_2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n4</span><span class="p">(</span><span class="n">h2</span><span class="p">)</span>
+        <span class="n">h3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n5</span><span class="p">(</span><span class="n">head_2</span><span class="p">)</span>
+        <span class="n">h3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">h3</span><span class="p">,</span> <span class="n">p5</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">head_3</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n6</span><span class="p">(</span><span class="n">h3</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">head_1</span><span class="p">,</span> <span class="n">head_2</span><span class="p">,</span> <span class="n">head_3</span><span class="p">]</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DetectionHead">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.DetectionHead">[docs]</a>
+<span class="k">class</span> <span class="nc">DetectionHead</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8&#39;s detection head.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    nc : int</span>
+<span class="sd">        Number of classes to predict.</span>
+<span class="sd">    filters : tuple</span>
+<span class="sd">        Number of channels of the three inputs of the detection head.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nc</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="p">()):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reg_max</span> <span class="o">=</span> <span class="mi">16</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nc</span> <span class="o">=</span> <span class="n">nc</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nl</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filters</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">no</span> <span class="o">=</span> <span class="n">nc</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_max</span> <span class="o">*</span> <span class="mi">4</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stride</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">,</span> <span class="mf">32.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+        <span class="n">c2</span><span class="p">,</span> <span class="n">c3</span> <span class="o">=</span> <span class="nb">max</span><span class="p">((</span><span class="mi">16</span><span class="p">,</span> <span class="n">filters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">//</span> <span class="mi">4</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_max</span> <span class="o">*</span> <span class="mi">4</span><span class="p">)),</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="n">filters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nc</span><span class="p">,</span> <span class="mi">104</span><span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># channels</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span>
+                <span class="n">Conv</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">Conv</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="n">c2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">c2</span><span class="p">,</span> <span class="mi">4</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_max</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">filters</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cv3</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">ModuleList</span><span class="p">(</span>
+            <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="n">Conv</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">Conv</span><span class="p">(</span><span class="n">c3</span><span class="p">,</span> <span class="n">c3</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">nn</span><span class="o">.</span><span class="n">Conv2d</span><span class="p">(</span><span class="n">c3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">nc</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">filters</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dfl</span> <span class="o">=</span> <span class="n">DFL</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reg_max</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DetectionHead.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.DetectionHead.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 detection head.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : list</span>
+<span class="sd">            Input to the detection head.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Output of the detection head : torch.Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nl</span><span class="p">):</span>
+            <span class="n">a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv2</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cv3</span><span class="p">[</span><span class="n">i</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">anchors</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">strides</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">xl</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">xl</span> <span class="ow">in</span> <span class="n">make_anchors</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stride</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+        <span class="p">)</span>
+
+        <span class="n">y</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">no</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+        <span class="n">x_cat</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">box</span><span class="p">,</span> <span class="bp">cls</span> <span class="o">=</span> <span class="n">x_cat</span><span class="p">[:,</span> <span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_max</span> <span class="o">*</span> <span class="mi">4</span><span class="p">],</span> <span class="n">x_cat</span><span class="p">[:,</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_max</span> <span class="o">*</span> <span class="mi">4</span> <span class="p">:]</span>
+        <span class="n">dbox</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">dist2bbox</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dfl</span><span class="p">(</span><span class="n">box</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchors</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">xywh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">strides</span>
+        <span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">dbox</span><span class="p">,</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">()(</span><span class="bp">cls</span><span class="p">)),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span><span class="p">,</span> <span class="n">x</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="YOLOv8">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.YOLOv8">[docs]</a>
+<span class="k">class</span> <span class="nc">YOLOv8</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements YOLOv8 network.</span>
+
+<span class="sd">    Arguments</span>
+<span class="sd">    ---------</span>
+<span class="sd">    w : float</span>
+<span class="sd">        Width multiple of the Darknet.</span>
+<span class="sd">    r : float</span>
+<span class="sd">        Ratio multiple of the Darknet.</span>
+<span class="sd">    d : float</span>
+<span class="sd">        Depth multiple of the Darknet.</span>
+<span class="sd">    num_classes : int</span>
+<span class="sd">        Number of classes to predict.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">Darknet</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fpn</span> <span class="o">=</span> <span class="n">Yolov8Neck</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">head</span> <span class="o">=</span> <span class="n">DetectionHead</span><span class="p">(</span>
+            <span class="n">num_classes</span><span class="p">,</span> <span class="n">filters</span><span class="o">=</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">256</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">512</span> <span class="o">*</span> <span class="n">w</span> <span class="o">*</span> <span class="n">r</span><span class="p">))</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="YOLOv8.forward">
+<a class="viewcode-back" href="../../../micromind.networks.html#micromind.networks.yolo.YOLOv8.forward">[docs]</a>
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes YOLOv8 network.</span>
+
+<span class="sd">        Arguments</span>
+<span class="sd">        ---------</span>
+<span class="sd">        x : torch.Tensor</span>
+<span class="sd">            Input to the YOLOv8 network.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">            Output of the YOLOv8 network : torch.Tensor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fpn</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">x</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, MicroMind.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

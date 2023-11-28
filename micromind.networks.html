@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>micromind.networks package &mdash; micromind 0.0.1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -110,72 +112,42 @@
 <dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">DepthwiseConv2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth_multiplier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'zeros'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#DepthwiseConv2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Conv2d</span></code></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.bias">
-<span class="sig-name descname"><span class="pre">bias</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.bias" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.dilation">
-<span class="sig-name descname"><span class="pre">dilation</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.dilation" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.groups">
-<span class="sig-name descname"><span class="pre">groups</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.groups" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.in_channels">
-<span class="sig-name descname"><span class="pre">in_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.in_channels" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.kernel_size">
-<span class="sig-name descname"><span class="pre">kernel_size</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.kernel_size" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.out_channels">
-<span class="sig-name descname"><span class="pre">out_channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.out_channels" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.output_padding">
-<span class="sig-name descname"><span class="pre">output_padding</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.output_padding" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.padding">
-<span class="sig-name descname"><span class="pre">padding</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.padding" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.padding_mode">
-<span class="sig-name descname"><span class="pre">padding_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.padding_mode" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.stride">
-<span class="sig-name descname"><span class="pre">stride</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.stride" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.transposed">
-<span class="sig-name descname"><span class="pre">transposed</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.transposed" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.DepthwiseConv2d.weight">
-<span class="sig-name descname"><span class="pre">weight</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tensor</span></em><a class="headerlink" href="#micromind.networks.phinet.DepthwiseConv2d.weight" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
+<p>Depthwise 2D convolution layer.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – Number of input channels.</p></li>
+<li><p><strong>depth_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – The channel multiplier for the output channels (default is 1).</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em><em> or </em><em>tuple</em><em>, </em><em>optional</em>) – Size of the convolution kernel (default is 3).</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em> or </em><em>tuple</em><em>, </em><em>optional</em>) – Stride of the convolution (default is 1).</p></li>
+<li><p><strong>padding</strong> (<em>int</em><em> or </em><em>tuple</em><em>, </em><em>optional</em>) – Zero-padding added to both sides of the input (default is 0).</p></li>
+<li><p><strong>dilation</strong> (<em>int</em><em> or </em><em>tuple</em><em>, </em><em>optional</em>) – Spacing between kernel elements (default is 1).</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, adds a learnable bias to the output (default is False).</p></li>
+<li><p><strong>padding_mode</strong> (<em>str</em><em>, </em><em>optional</em>) – ‘zeros’ or ‘circular’. Padding mode for convolution (default is ‘zeros’).</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="micromind.networks.phinet.PhiNet">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">PhiNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_zero</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_top</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatibility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downsampling_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[5,</span> <span class="pre">7]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv5_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_conv_stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residuals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv2d_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_swish</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squeeze_excite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divisor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#PhiNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.PhiNet" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">PhiNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t_zero</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_top</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compatibility</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">downsampling_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[5,</span> <span class="pre">7]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv5_percent</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_conv_stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">residuals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conv2d_input</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_swish</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">squeeze_excite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divisor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_layers</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#PhiNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.PhiNet" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>This class implements the PhiNet architecture.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_shape</strong> (<em>tuple</em>) – Input resolution as (C, H, W).</p></li>
+<li><p><strong>num_layers</strong> (<em>int</em>) – Number of convolutional blocks.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Width multiplier for PhiNet architecture.</p></li>
+<li><p><strong>beta</strong> (<em>float</em>) – Shape factor of PhiNet.</p></li>
+<li><p><strong>t_zero</strong> (<em>float</em>) – Base expansion factor for PhiNet.</p></li>
+<li><p><strong>include_top</strong> (<em>bool</em>) – Whether to include classification head or not.</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – Number of classes for the classification head.</p></li>
+<li><p><strong>compatibility</strong> (<em>bool</em>) – <cite>True</cite> to maximise compatibility among embedded platforms (changes network).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="micromind.networks.phinet.PhiNet.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#PhiNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.PhiNet.forward" title="Link to this definition"></a></dt>
@@ -256,40 +228,44 @@
 </div>
 </dd></dl>
 
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.PhiNet.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#micromind.networks.phinet.PhiNet.training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="micromind.networks.phinet.PhiNetConvBlock">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">PhiNetConvBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expansion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_se</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">res</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_swish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dp_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">divisor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#PhiNetConvBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.PhiNetConvBlock" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
-<p>Implements PhiNet’s convolutional block</p>
+<p>Implements PhiNet’s convolutional block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_shape</strong> (<em>tuple</em>) – Input shape of the conv block.</p></li>
+<li><p><strong>expansion</strong> (<em>float</em>) – Expansion coefficient for this convolutional block.</p></li>
+<li><p><strong>stride</strong> (<em>int</em>) – Stride for the conv block.</p></li>
+<li><p><strong>filters</strong> (<em>int</em>) – Output channels of the convolutional block.</p></li>
+<li><p><strong>block_id</strong> (<em>int</em>) – ID of the convolutional block.</p></li>
+<li><p><strong>has_se</strong> (<em>bool</em>) – Whether to include use Squeeze and Excite or not.</p></li>
+<li><p><strong>res</strong> (<em>bool</em>) – Whether to use the residual connection or not.</p></li>
+<li><p><strong>h_swish</strong> (<em>bool</em>) – Whether to use HSwish or not.</p></li>
+<li><p><strong>k_size</strong> (<em>int</em>) – Kernel size for the depthwise convolution.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="micromind.networks.phinet.PhiNetConvBlock.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#PhiNetConvBlock.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.PhiNetConvBlock.forward" title="Link to this definition"></a></dt>
-<dd><p>Executes PhiNet convolutional block</p>
+<dd><p>Executes the PhiNet convolutional block.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> – torch.Tensor
-Input to the convolutional block.</p>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input to the convolutional block.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>torch.Tensor</p>
+<dd class="field-even"><p>Output of the convolutional block.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>Ouput of the convolutional block</p>
+<dd class="field-odd"><p>torch.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.PhiNetConvBlock.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#micromind.networks.phinet.PhiNetConvBlock.training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -297,24 +273,28 @@ Input to the convolutional block.</p>
 <dt class="sig sig-object py" id="micromind.networks.phinet.ReLUMax">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">ReLUMax</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#ReLUMax"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.ReLUMax" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements ReLUMax.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>max_value</strong> (<em>float</em>) – The maximum value for the clamp operation.</p>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="micromind.networks.phinet.ReLUMax.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#ReLUMax.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.ReLUMax.forward" title="Link to this definition"></a></dt>
-<dd><p>Defines the computation performed at every call.</p>
-<p>Should be overridden by all subclasses.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Although the recipe for forward pass needs to be defined within
-this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
-instead of this since the former takes care of running the
-registered hooks while the latter silently ignores them.</p>
-</div>
+<dd><p>Forward pass of ReLUMax.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input tensor.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Output tensor after applying ReLU with max value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.ReLUMax.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#micromind.networks.phinet.ReLUMax.training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -322,28 +302,32 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="micromind.networks.phinet.SEBlock">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">SEBlock</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_swish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#SEBlock"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.SEBlock" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
-<p>Implements squeeze-and-excitation block</p>
+<p>Implements squeeze-and-excitation block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – Input number of channels.</p></li>
+<li><p><strong>out_channels</strong> (<em>int</em>) – Output number of channels.</p></li>
+<li><p><strong>h_swish</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to use the h_swish (default is True).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="micromind.networks.phinet.SEBlock.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#SEBlock.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.SEBlock.forward" title="Link to this definition"></a></dt>
-<dd><p>Executes SE Block</p>
+<dd><p>Executes the squeeze-and-excitation block.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>[</em><em>Tensor</em><em>]</em>) – [input tensor]</p>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input tensor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>[output of squeeze-and-excitation block]</p>
+<dd class="field-even"><p>Output of the squeeze-and-excitation block.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>[Tensor]</p>
+<dd class="field-odd"><p>torch.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.SEBlock.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#micromind.networks.phinet.SEBlock.training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -351,47 +335,536 @@ registered hooks while the latter silently ignores them.</p>
 <dt class="sig sig-object py" id="micromind.networks.phinet.SeparableConv2d">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">SeparableConv2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">in_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_channels</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation=&lt;function</span> <span class="pre">relu&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size=3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bias=True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding_mode='zeros'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth_multiplier=1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#SeparableConv2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.SeparableConv2d" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
-<p>Implements SeparableConv2d</p>
+<p>Implements SeparableConv2d.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>in_channels</strong> (<em>int</em>) – Input number of channels.</p></li>
+<li><p><strong>out_channels</strong> (<em>int</em>) – Output number of channels.</p></li>
+<li><p><strong>activation</strong> (<em>function</em><em>, </em><em>optional</em>) – Activation function to apply (default is torch.nn.functional.relu).</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em><em>, </em><em>optional</em>) – Kernel size (default is 3).</p></li>
+<li><p><strong>stride</strong> (<em>int</em><em>, </em><em>optional</em>) – Stride for convolution (default is 1).</p></li>
+<li><p><strong>padding</strong> (<em>int</em><em>, </em><em>optional</em>) – Padding for convolution (default is 0).</p></li>
+<li><p><strong>dilation</strong> (<em>int</em><em>, </em><em>optional</em>) – Dilation factor for convolution (default is 1).</p></li>
+<li><p><strong>bias</strong> (<em>bool</em><em>, </em><em>optional</em>) – If True, adds a learnable bias to the output (default is True).</p></li>
+<li><p><strong>padding_mode</strong> (<em>str</em><em>, </em><em>optional</em>) – Padding mode for convolution (default is ‘zeros’).</p></li>
+<li><p><strong>depth_multiplier</strong> (<em>int</em><em>, </em><em>optional</em>) – Depth multiplier (default is 1).</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="micromind.networks.phinet.SeparableConv2d.forward">
 <span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#SeparableConv2d.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.SeparableConv2d.forward" title="Link to this definition"></a></dt>
-<dd><p>Executes SeparableConv2d block</p>
+<dd><p>Executes the SeparableConv2d block.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>x</strong> (<em>[</em><em>Tensor</em><em>]</em>) – [Input tensor]</p>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input tensor.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>[Output of convolution]</p>
+<dd class="field-even"><p>Output of the convolution.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>[Tensor]</p>
+<dd class="field-odd"><p>torch.Tensor</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="micromind.networks.phinet.SeparableConv2d.training">
-<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#micromind.networks.phinet.SeparableConv2d.training" title="Link to this definition"></a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="micromind.networks.phinet.correct_pad">
 <span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">correct_pad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#correct_pad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.correct_pad" title="Link to this definition"></a></dt>
-<dd><p>Returns a tuple for zero-padding for 2D convolution with downsampling</p>
+<dd><p>Returns a tuple for zero-padding for 2D convolution with downsampling.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_shape</strong> (<em>tuple</em><em> or </em><em>list</em>) – Shape of the input tensor (height, width).</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em><em> or </em><em>tuple</em>) – Size of the convolution kernel.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A tuple representing the zero-padding in the format (left, right, top, bottom).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="micromind.networks.phinet.get_xpansion_factor">
 <span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">get_xpansion_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t_zero</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_blocks</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#get_xpansion_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.get_xpansion_factor" title="Link to this definition"></a></dt>
-<dd><p>Compute expansion factor based on the formula from the paper</p>
+<dd><p>Compute the expansion factor based on the formula from the paper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t_zero</strong> (<em>float</em>) – The base expansion factor.</p></li>
+<li><p><strong>beta</strong> (<em>float</em>) – The shape factor.</p></li>
+<li><p><strong>block_id</strong> (<em>int</em>) – The identifier of the current block.</p></li>
+<li><p><strong>num_blocks</strong> (<em>int</em>) – The total number of blocks.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The computed expansion factor.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="micromind.networks.phinet.preprocess_input">
 <span class="sig-prename descclassname"><span class="pre">micromind.networks.phinet.</span></span><span class="sig-name descname"><span class="pre">preprocess_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/phinet.html#preprocess_input"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.phinet.preprocess_input" title="Link to this definition"></a></dt>
-<dd><p>Normalise channels between [-1, 1]</p>
+<dd><p>Normalize input channels between [-1, 1].</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input tensor to be preprocessed.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Normalized tensor with values between [-1, 1].</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-micromind.networks.xinet">
+<span id="micromind-networks-xinet-module"></span><h2>micromind.networks.xinet module<a class="headerlink" href="#module-micromind.networks.xinet" title="Link to this heading"></a></h2>
+<p>Code for XiNet (<a class="reference external" href="https://shorturl.at/mtHT0">https://shorturl.at/mtHT0</a>)</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Francesco Paissan, 2023</p></li>
+<li><p>Alberto Ancilotto, 2023</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.xinet.XiConv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.xinet.</span></span><span class="sig-name descname"><span class="pre">XiConv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c_in</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">act</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_tensor_in</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_res</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_channels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pool</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attention_lite</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batchnorm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/xinet.html#XiConv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.xinet.XiConv" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements XiNet’s convolutional block as presented in the original paper.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c_in</strong> (<em>int</em>) – Number of input channels.</p></li>
+<li><p><strong>c_out</strong> (<em>int</em>) – Number of output channels.</p></li>
+<li><p><strong>kernel_size</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>Tuple</em><em>]</em>) – Kernel size for the main convolution.</p></li>
+<li><p><strong>stride</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>Tuple</em><em>]</em>) – Stride for the main convolution.</p></li>
+<li><p><strong>padding</strong> (<em>Optional</em><em>[</em><em>Union</em><em>[</em><em>int</em><em>, </em><em>Tuple</em><em>]</em><em>]</em>) – Padding that is applied in the main convolution.</p></li>
+<li><p><strong>groups</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Number of groups for the main convolution.</p></li>
+<li><p><strong>act</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – When True, uses SiLU activation function after
+the main convolution.</p></li>
+<li><p><strong>gamma</strong> (<em>Optional</em><em>[</em><em>float</em><em>]</em>) – Compression factor for the convolutional block.</p></li>
+<li><p><strong>attention</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – When True, uses attention.</p></li>
+<li><p><strong>skip_tensor_in</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – When True, defines broadcasting skip connection block.</p></li>
+<li><p><strong>skip_res</strong> (<em>Optional</em><em>[</em><em>List</em><em>]</em>) – Spatial resolution of the skip connection, such that
+average pooling is statically defined.</p></li>
+<li><p><strong>skip_channels</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Number of channels for the input block.</p></li>
+<li><p><strong>pool</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – When True, applies pooling after the main convolution.</p></li>
+<li><p><strong>attention_k</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Kernel for the attention module.</p></li>
+<li><p><strong>attention_lite</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – When True, uses efficient attention implementation.</p></li>
+<li><p><strong>batchnorm</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – When True, uses batch normalization inside the ConvBlock.</p></li>
+<li><p><strong>dropout_rate</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Dropout probability.</p></li>
+<li><p><strong>skip_k</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – Kernel for the broadcast skip connection.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.xinet.XiConv.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/xinet.html#XiConv.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.xinet.XiConv.forward" title="Link to this definition"></a></dt>
+<dd><p>Computes the forward step of the XiNet’s convolutional block.
+:param x: Input tensor.
+:type x: torch.Tensor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ConvBlock output.</strong></p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.xinet.XiNet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.xinet.</span></span><span class="sig-name descname"><span class="pre">XiNet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gamma</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1000</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base_filters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_layers</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/xinet.html#XiNet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.xinet.XiNet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Defines a XiNet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_shape</strong> (<em>List</em>) – Shape of the input tensor.</p></li>
+<li><p><strong>alpha</strong> (<em>float</em>) – Width multiplier.</p></li>
+<li><p><strong>gamma</strong> (<em>float</em>) – Compression factor.</p></li>
+<li><p><strong>num_layers</strong> (<em>int = 5</em>) – Number of convolutional blocks.</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – Number of classes. It is used only when include_top is True.</p></li>
+<li><p><strong>include_top</strong> (<em>Optional</em><em>[</em><em>bool</em><em>]</em>) – When True, defines an MLP for classification.</p></li>
+<li><p><strong>base_filters</strong> (<em>int</em>) – Number of base filters for the ConvBlock.</p></li>
+<li><p><strong>return_layers</strong> (<em>Optional</em><em>[</em><em>List</em><em>]</em>) – Ids of the layers to be returned after processing the foward
+step.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="highlight-pycon notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">micromind.networks</span> <span class="kn">import</span> <span class="n">XiNet</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">XiNet</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.xinet.XiNet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/xinet.html#XiNet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.xinet.XiNet.forward" title="Link to this definition"></a></dt>
+<dd><p>Computes the forward step of the XiNet.
+:param x: Input tensor.
+:type x: torch.Tensor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>the init. : Union[torch.Tensor, Tuple]</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>Output of the network, as defined from</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="micromind.networks.xinet.autopad">
+<span class="sig-prename descclassname"><span class="pre">micromind.networks.xinet.</span></span><span class="sig-name descname"><span class="pre">autopad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/xinet.html#autopad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.xinet.autopad" title="Link to this definition"></a></dt>
+<dd><p>Implements padding to mimic “same” behaviour.
+:param k: Kernel size for the convolution.
+:type k: int
+:param p: Padding value to be applied.
+:type p: Optional[int]</p>
+</dd></dl>
+
+</section>
+<section id="module-micromind.networks.yolo">
+<span id="micromind-networks-yolo-module"></span><h2>micromind.networks.yolo module<a class="headerlink" href="#module-micromind.networks.yolo" title="Link to this heading"></a></h2>
+<p>YOLOv8 building blocks.</p>
+<dl class="simple">
+<dt>Authors:</dt><dd><ul class="simple">
+<li><p>Matteo Beltrami, 2023</p></li>
+<li><p>Francesco Paissan, 2023</p></li>
+</ul>
+</dd>
+</dl>
+<p>This file contains the definition of the building blocks of the yolov8 network.
+Model architecture has been taken from
+<a class="reference external" href="https://github.com/ultralytics/ultralytics/issues/189">https://github.com/ultralytics/ultralytics/issues/189</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Bottleneck">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">Bottleneck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shortcut</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernels</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(3,</span> <span class="pre">3)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">channel_factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Bottleneck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Bottleneck" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8’s bottleneck block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c1</strong> (<em>int</em>) – Input channels of the bottleneck block.</p></li>
+<li><p><strong>c2</strong> (<em>int</em>) – Output channels of the bottleneck block.</p></li>
+<li><p><strong>shortcut</strong> (<em>bool</em>) – Decides whether to perform a shortcut in the bottleneck block.</p></li>
+<li><p><strong>groups</strong> (<em>int</em>) – Groups for the bottleneck block.</p></li>
+<li><p><strong>kernels</strong> (<em>list</em>) – Kernel size for the bottleneck block.</p></li>
+<li><p><strong>channel_factor</strong> (<em>float</em>) – Decides the number of channels of the intermediate result
+between the two convolutional blocks.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Bottleneck.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Bottleneck.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Bottleneck.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 bottleneck block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input to the bottleneck block.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Ouput of the bottleneck block</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.C2f">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">C2f</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shortcut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">e</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#C2f"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.C2f" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8’s C2f block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c1</strong> (<em>int</em>) – Input channels of the C2f block.</p></li>
+<li><p><strong>c2</strong> (<em>int</em>) – Output channels of the C2f block.</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of bottleck blocks executed in the C2f block.</p></li>
+<li><p><strong>shortcut</strong> (<em>bool</em>) – Decides whether to perform a shortcut in the bottleneck blocks.</p></li>
+<li><p><strong>groups</strong> (<em>int</em>) – Groups for the C2f block.</p></li>
+<li><p><strong>e</strong> (<em>float</em>) – Factor for cancatenating intermeidate results.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.C2f.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#C2f.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.C2f.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 C2f block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input to the C2f block.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Ouput of the C2f block</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Conv">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">Conv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kernel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stride</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">padding</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dilation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Conv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Conv" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8’s convolutional block</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c1</strong> (<em>int</em>) – Input channels of the convolutional block.</p></li>
+<li><p><strong>c2</strong> (<em>int</em>) – Output channels of the convolutional block.</p></li>
+<li><p><strong>kernel_size</strong> (<em>int</em>) – Kernel size for the convolutional block.</p></li>
+<li><p><strong>stride</strong> (<em>int</em>) – Stride for the convolutional block.</p></li>
+<li><p><strong>padding</strong> (<em>int</em>) – Padding for the convolutional block.</p></li>
+<li><p><strong>dilation</strong> (<em>int</em>) – Dilation for the convolutional block.</p></li>
+<li><p><strong>groups</strong> (<em>int</em>) – Groups for the convolutional block.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Conv.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Conv.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Conv.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 convolutional block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input to the convolutional block.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Ouput of the convolutional block</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.DFL">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">DFL</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#DFL"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.DFL" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8’s DFL block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>c1</strong> (<em>int</em>) – Input channels of the DFL block.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.DFL.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#DFL.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.DFL.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 DFL block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input to the DFL block.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Ouput of the DFL block</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Darknet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">Darknet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Darknet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Darknet" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8’s convolutional backbone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w</strong> (<em>float</em>) – Width multiple of the Darknet.</p></li>
+<li><p><strong>r</strong> (<em>float</em>) – Ratio multiple of the Darknet.</p></li>
+<li><p><strong>d</strong> (<em>float</em>) – Depth multiple of the Darknet.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Darknet.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Darknet.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Darknet.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 convolutional backbone.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input to the Darknet.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Three intermediate representations with different resolutions</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.DetectionHead">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">DetectionHead</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">80</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#DetectionHead"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.DetectionHead" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8’s detection head.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>nc</strong> (<em>int</em>) – Number of classes to predict.</p></li>
+<li><p><strong>filters</strong> (<em>tuple</em>) – Number of channels of the three inputs of the detection head.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.DetectionHead.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#DetectionHead.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.DetectionHead.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 detection head.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>list</em>) – Input to the detection head.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Output of the detection head</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.SPPF">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">SPPF</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">c1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#SPPF"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.SPPF" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8’s SPPF block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>c1</strong> (<em>int</em>) – Input channels of the SPPF block.</p></li>
+<li><p><strong>c2</strong> (<em>int</em>) – Output channels of the SPPF block.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – Kernel size for the SPPF block Maxpooling operations</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.SPPF.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#SPPF.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.SPPF.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 SPPF block.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input to the SPPF block.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Ouput of the SPPF block</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Upsample">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">Upsample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale_factor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'nearest'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Upsample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Upsample" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.YOLOv8">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">YOLOv8</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">w</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_classes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">80</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#YOLOv8"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.YOLOv8" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8 network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w</strong> (<em>float</em>) – Width multiple of the Darknet.</p></li>
+<li><p><strong>r</strong> (<em>float</em>) – Ratio multiple of the Darknet.</p></li>
+<li><p><strong>d</strong> (<em>float</em>) – Depth multiple of the Darknet.</p></li>
+<li><p><strong>num_classes</strong> (<em>int</em>) – Number of classes to predict.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.YOLOv8.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#YOLOv8.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.YOLOv8.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 network.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>torch.Tensor</em>) – Input to the YOLOv8 network.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Output of the YOLOv8 network</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>torch.Tensor</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Yolov8Neck">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">micromind.networks.yolo.</span></span><span class="sig-name descname"><span class="pre">Yolov8Neck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[256,</span> <span class="pre">512,</span> <span class="pre">768]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">up</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[2,</span> <span class="pre">2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Yolov8Neck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Yolov8Neck" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code></p>
+<p>Implements YOLOv8’s neck.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>w</strong> (<em>float</em>) – Width multiple of the Darknet.</p></li>
+<li><p><strong>r</strong> (<em>float</em>) – Ratio multiple of the Darknet.</p></li>
+<li><p><strong>d</strong> (<em>float</em>) – Depth multiple of the Darknet.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="micromind.networks.yolo.Yolov8Neck.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/micromind/networks/yolo.html#Yolov8Neck.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#micromind.networks.yolo.Yolov8Neck.forward" title="Link to this definition"></a></dt>
+<dd><p>Executes YOLOv8 neck.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>tuple</em>) – Input to the neck.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Three intermediate representations with different resolutions</strong></p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
